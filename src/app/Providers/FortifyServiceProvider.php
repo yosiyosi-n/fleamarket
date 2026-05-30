@@ -54,5 +54,10 @@ class FortifyServiceProvider extends ServiceProvider
         \Laravel\Fortify\Fortify::registerView(function () {
             return view('auth.register');
         });
+
+        $this->app->bind(
+            \Laravel\Fortify\Http\Requests\RegisterRequest::class,
+            \App\Http\Requests\RegisterRequest::class
+        );
     }
 }
