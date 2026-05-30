@@ -59,5 +59,10 @@ class FortifyServiceProvider extends ServiceProvider
             \Laravel\Fortify\Http\Requests\RegisterRequest::class,
             \App\Http\Requests\RegisterRequest::class
         );
+
+        $this->app->bind(
+            \Laravel\Fortify\Http\Requests\LoginRequest::class,
+            \App\Http\Requests\LoginRequest::class
+        );
     }
 }

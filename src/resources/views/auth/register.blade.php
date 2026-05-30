@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="title">会員登録 - フリマアプリ</x-slot>
 
-    <div style="max-width: 400px; margin: 60px auto; padding: 30px; background-color: #ffffff; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
+    <div style="max-width: 400px; margin: 60px auto; padding: 30px;">
         <h2 style="text-align: center; margin-bottom: 30px; color: #333; font-size: 22px;">会員登録</h2>
 
         <!-- 登録処理を実行するFortifyのURL「/register」へPOSTで送信します -->
@@ -58,7 +58,7 @@
 
         <!-- ログイン画面へのリンク -->
         <div style="text-align: center; margin-top: 20px;">
-            <a href="/login" style="color: #0066cc; text-decoration: none; font-size: 14px;">すでにアカウントをお持ちの方（ログイン）</a>
+            <a href="/login" style="color: #0066cc; text-decoration: none; font-size: 14px;">ログインはこちら</a>
         </div>
     </div>
 </x-app-layout>
