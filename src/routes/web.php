@@ -23,6 +23,7 @@ Route::get('/sell', [ItemController::class, 'create'])->name('item.create');
 Route::post('/sell', [ItemController::class, 'store']);
 Route::get('/sell', [ItemController::class, 'create'])->middleware('auth');
 Route::post('/sell', [ItemController::class, 'store'])->middleware('auth');
+Route::post('/item/{item_id}/comment', [ItemController::class, 'storeComment'])->middleware('auth');
 
 // 2. 購入関連（PurchaseController）
 Route::get('/purchase/{item_id}', [PurchaseController::class, 'index'])->name('purchase.index');

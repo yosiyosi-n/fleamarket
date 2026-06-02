@@ -9,6 +9,7 @@ class Item extends Model
 {
     use HasFactory;
 
+    // データベースへの保存を許可する項目
     protected $fillable = [
         'user_id',
         'name',
@@ -20,16 +21,32 @@ class Item extends Model
     ];
 
     /**
-     * ⬇︎ 【★ここを追加！】商品に紐づく複数のカテゴリを取得する設定（多対多） ⬇︎
+     * 🔗 1. カテゴリとの多対多リレーション
      */
     public function categories()
     {
-        // 先ほど作成した「category_item」中間テーブルを介して、Categoryモデルと結びつけます
         return $this->belongsToMany(Category::class, 'category_item', 'item_id', 'category_item_id');
     }
 
     /**
-     * ⬇︎ 【★ついでにここも追加！】仕様書4番の「Sold表示」でエラーにならないための購入履歴リレーション ⬇︎
+     * 🔗 2. 【★ここが原因！】いいね機能との1対多リレーション
+     * これが抜けていたため、RelationNotFoundException が発生していました
+     */
+    public function likes()
+    {
+        return $this->hasMany(Like::class);
+    }
+
+    /**
+     * 🔗 3. コメント機能との1対多リレーション
+     */
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
+
+    /**
+     * 🔗 4. 購入履歴との1対多リレーション
      */
     public function purchases()
     {

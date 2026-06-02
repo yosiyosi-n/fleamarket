@@ -29,12 +29,36 @@ class ItemController extends Controller
         return view('item.index', compact('items'));
     }
 
-    /**
-     * 商品詳細画面を表示する（★消さずに残しておきます！）
+        /**
+     * 商品詳細画面を表示する
      */
     public function show($item_id)
     {
-        return view('item.show');
+        // 💡 仕様書の指定項目（カテゴリ、いいね、コメント、コメントしたユーザー）をすべて1回の通信でまとめて取得
+        $item = \App\Models\Item::with(['categories', 'likes', 'comments.user'])->findOrFail($item_id);
+
+        // 💡 いいね数とコメント数をカウント
+        $likesCount = $item->likes->count();
+        $commentsCount = $item->comments->count();
+
+        // 画面（views/item/show.blade.php）にすべてのデータを渡して表示します
+        return view('item.show', compact('item', 'likesCount', 'commentsCount'));
+    }
+
+    /**
+     * 商品へのコメントを投稿・保存する（仕様書9番の裏側処理）
+     */
+    public function storeComment(\App\Http\Requests\CommentRequest $request, $item_id)
+    {
+        // 💡 データベースの comments テーブルに新しいレコードを保存します
+        \App\Models\Comment::create([
+            'user_id' => \Illuminate\Support\Facades\Auth::id(), // ログイン中のユーザーID
+            'item_id' => $item_id,                             // 対象の商品ID
+            'comment' => $request->comment,                    // コメント本文
+        ]);
+
+        // 保存が終わったら、元の詳細画面へ戻します
+        return redirect()->back();
     }
 
     /**

@@ -1,1 +1,112 @@
-<!-- 商品詳細画面 -->
+<x-app-layout>
+    <x-slot name="title">{{ $item->name }} - フリマアプリ</x-slot>
+
+    <main style="max-width: 1024px; margin: 40px auto; padding: 0 20px; display: flex; gap: 50px; flex-wrap: wrap;">
+        
+        <!-- 📸 左側：商品画像エリア -->
+        <div style="flex: 1; min-width: 300px; max-width: 500px;">
+            <div style="width: 100%; aspect-ratio: 1; background-color: #e0e0e0; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.05); display: flex; align-items: center; justify-content: center;">
+                @if($item->image_path)
+                    <img src="{{ asset('storage/' . $item->image_path) }}" alt="{{ $item->name }}" style="width: 100%; height: 100%; object-fit: cover;">
+                @else
+                    <span style="color: #999; font-size: 20px;">NO IMAGE</span>
+                @endif
+            </div>
+        </div>
+
+        <!-- 📝 右側：商品情報・購入エリア -->
+        <div style="flex: 1; min-width: 300px;">
+            <h1 style="font-size: 28px; font-weight: bold; margin: 0 0 10px 0; color: #333;">{{ $item->name }}</h1>
+            <p style="font-size: 16px; color: #666; margin: 0 0 20px 0;">{{ $item->brand ?? 'ブランド情報なし' }}</p>
+            
+            <div style="font-size: 24px; font-weight: bold; color: #ff3333; margin-bottom: 25px;">
+                ¥{{ number_format($item->price) }} <span style="font-size: 14px; color: #666; font-weight: normal;">(税込)</span>
+            </div>
+
+            <!-- 📊 いいね・コメント数カウンター表示エリア（仕様書項目） -->
+            <div style="display: flex; gap: 20px; margin-bottom: 30px;">
+                <div style="text-align: center;">
+                    <img src="{{ asset('img/heart-default.png') }}" alt="いいね" style="width: 24px; height: 24px; cursor: pointer;">
+                    <div style="font-size: 14px; color: #555; margin-top: 4px;">{{ $likesCount }}</div>
+                </div>
+                <div style="text-align: center;">
+                    <img src="{{ asset('img/comment-logo.png') }}" alt="コメント" style="width: 24px; height: 24px;">
+                    <div style="font-size: 14px; color: #555; margin-top: 4px;">{{ $commentsCount }}</div>
+                </div>
+            </div>
+
+            <!-- 🛒 購入するボタン -->
+            <a href="/purchase/{{ $item->id }}" style="display: block; text-align: center; background-color: #ff3333; color: white; text-decoration: none; padding: 15px; border-radius: 4px; font-size: 18px; font-weight: bold; margin-bottom: 40px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                購入する
+            </a>
+
+            <!-- 📄 商品の説明（仕様書項目） -->
+            <h2 style="font-size: 18px; border-bottom: 2px solid #333; padding-bottom: 8px; margin-bottom: 15px; color: #333;">商品説明</h2>
+            <p style="font-size: 16px; line-height: 1.6; color: #444; margin-bottom: 40px; white-space: pre-wrap;">{{ $item->description }}</p>
+
+            <!-- ℹ️ 商品の情報テーブル（仕様書項目・複数カテゴリ対応） -->
+            <h2 style="font-size: 18px; border-bottom: 2px solid #333; padding-bottom: 8px; margin-bottom: 15px; color: #333;">商品情報</h2>
+            <table style="width: 100%; border-collapse: collapse; margin-bottom: 40px; font-size: 16px;">
+                <tr style="border-bottom: 1px solid #e0e0e0;">
+                    <th style="text-align: left; padding: 15px 10px; width: 30%; color: #555; background-color: #fafafa;">カテゴリー</th>
+                    <td style="padding: 15px 10px; display: flex; flex-wrap: wrap; gap: 8px;">
+                        @foreach($item->categories as $category)
+                            <span style="background-color: #ff9900; color: white; padding: 4px 12px; border-radius: 15px; font-size: 14px; font-weight: bold;">
+                                {{ $category->name }}
+                            </span>
+                        @endforeach
+                    </td>
+                </tr>
+                <tr style="border-bottom: 1px solid #e0e0e0;">
+                    <th style="text-align: left; padding: 15px 10px; color: #555; background-color: #fafafa;">商品の状態</th>
+                    <td style="padding: 15px 10px; color: #333;">{{ $item->condition }}</td>
+                </tr>
+            </table>
+
+            <!-- 💬 過去のコメント一覧表示エリア（仕様書項目：ユーザー名と本文表示） -->
+            <h2 style="font-size: 18px; border-bottom: 2px solid #333; padding-bottom: 8px; margin-bottom: 20px; color: #333;">コメント ({{ $commentsCount }})</h2>
+            <div style="margin-bottom: 30px;">
+                @forelse($item->comments as $comment)
+                    <div style="margin-bottom: 20px; background-color: #fafafa; padding: 15px; border-radius: 6px; border: 1px solid #e8e8e8;">
+                        <div style="font-weight: bold; font-size: 14px; color: #333; margin-bottom: 6px;">
+                            {{ $comment->user->name }} <span style="font-weight: normal; color: #999; font-size: 12px; margin-left: 10px;">{{ $comment->created_at->format('Y/m/d H:i') }}</span>
+                        </div>
+                        <p style="margin: 0; font-size: 15px; color: #444; line-height: 1.5; white-space: pre-wrap;">{{ $comment->comment }}</p>
+                    </div>
+                @empty
+                    <p style="color: #999; font-size: 15px;">コメントはまだありません。</p>
+                @endforelse
+            </div>
+
+            <!-- ⬇︎ 💡 コメント送信フォーム（仕様書9番対応） ⬇︎ -->
+            <div style="margin-top: 40px; background-color: #ffffff; padding: 25px; border-radius: 6px; border: 1px solid #e0e0e0;">
+                <h3 style="font-size: 16px; font-weight: bold; margin: 0 0 15px 0; color: #333;">商品へのコメント</h3>
+
+                <!-- 💡 【仕様書の条件】ログイン済みのユーザーだけにフォームを表示 -->
+                @auth
+                    <form action="/item/{{ $item->id }}/comment" method="POST">
+                        @csrf
+                        <textarea name="comment" rows="4" placeholder="コメントを入力してください（254文字以内）" style="width: 100%; padding: 12px; border: 1px solid {{ $errors->has('comment') ? '#ff3333' : '#ccc' }}; border-radius: 4px; box-sizing: border-box; font-size: 15px; resize: vertical; margin-bottom: 10px;">{{ old('comment') }}</textarea>
+                        
+                        <!-- ⬇︎ バリデーションエラーメッセージ ⬇︎ -->
+                        @error('comment')
+                            <div style="color: #ff3333; font-size: 14px; margin-bottom: 15px; font-weight: bold;">{{ $message }}</div>
+                        @enderror
+
+                        <button type="submit" style="background-color: #ff3333; color: white; border: none; padding: 12px 24px; border-radius: 4px; font-size: 15px; font-weight: bold; cursor: pointer; width: 100%;">
+                            コメントを送信する
+                        </button>
+                    </form>
+                @endauth
+
+                <!-- 💡 【仕様書の条件】ログイン前のユーザーは送信できない（警告を表示） -->
+                @guest
+                    <div style="background-color: #fcf8e3; border: 1px solid #faebcc; color: #8a6d3b; padding: 15px; border-radius: 4px; font-size: 14px; text-align: center; line-height: 1.5;">
+                        コメントを投稿するには、先に <a href="/login" style="color: #66512c; font-weight: bold; text-decoration: underline;">ログイン</a> または <a href="/register" style="color: #66512c; font-weight: bold; text-decoration: underline;">会員登録</a> を行う必要があります。
+                    </div>
+                @endguest
+            </div>
+
+        </div>
+    </main>
+</x-app-layout>
