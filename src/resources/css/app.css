@@ -1,15 +1,12 @@
-/* 💻 1. 基本のスタイル（PCや大画面用のデザイン） */
 .header-container {
     max-width: 1540px;
     margin: 0 auto;
     display: flex;
 }
 
-/* 📱 2. メディアクエリ（画面幅が 768px 以下のスマホサイズになった時だけ発動！） */
 @media screen and (max-width: 768px) {
     .header-container {
         flex-direction: column;
-        /* 横並びだったメニューを縦並びに変えて崩れを防ぐ */
         padding: 10px;
     }
 }

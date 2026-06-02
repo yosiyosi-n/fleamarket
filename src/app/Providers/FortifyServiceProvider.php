@@ -45,12 +45,10 @@ class FortifyServiceProvider extends ServiceProvider
             return Limit::perMinute(5)->by($request->session()->get('login.id'));
         });
 
-        // ⬇︎ ログイン画面（PG04）に views/auth/login.blade.php を使う指定 ⬇︎
         \Laravel\Fortify\Fortify::loginView(function () {
             return view('auth.login');
         });
 
-        // ⬇︎ 会員登録画面（PG03）に views/auth/register.blade.php を使う指定 ⬇︎
         \Laravel\Fortify\Fortify::registerView(function () {
             return view('auth.register');
         });
@@ -64,5 +62,17 @@ class FortifyServiceProvider extends ServiceProvider
             \Laravel\Fortify\Http\Requests\LoginRequest::class,
             \App\Http\Requests\LoginRequest::class
         );
+
+        \Laravel\Fortify\Fortify::authenticateUsing(function (Request $request) {
+            $user = \App\Models\User::where('email', $request->email)->first();
+
+            if ($user && \Illuminate\Support\Facades\Hash::check($request->password, $user->password)) {
+                return $user;
+            }
+
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                'email' => [(new \App\Http\Requests\LoginRequest())->messages()['email.failed']],
+            ]);
+        });
     }
 }
