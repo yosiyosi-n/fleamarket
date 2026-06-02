@@ -23,17 +23,42 @@
                 ¥{{ number_format($item->price) }} <span style="font-size: 14px; color: #666; font-weight: normal;">(税込)</span>
             </div>
 
-            <!-- 📊 いいね・コメント数カウンター表示エリア（仕様書項目） -->
-            <div style="display: flex; gap: 20px; margin-bottom: 30px;">
+                        <!-- 📊 修正後：いいね(色変化＆データ送信対応)・コメント数カウンター表示エリア（仕様書項目） -->
+            <div style="display: flex; gap: 20px; margin-bottom: 30px; align-items: center;">
+                
+                <!-- 💡 いいねボタンエリア -->
                 <div style="text-align: center;">
-                    <img src="{{ asset('img/heart-default.png') }}" alt="いいね" style="width: 24px; height: 24px; cursor: pointer;">
+                    @auth
+                        <!-- 💡 ログイン時は、クリックすると裏側（web.phpのルート）へデータを送るフォームにします -->
+                        <form action="/item/{{ $item->id }}/like" method="POST" style="margin: 0;">
+                            @csrf
+                            <button type="submit" style="background: none; border: none; padding: 0; cursor: pointer; display: block;">
+                                <!-- 💡 あなたが考えてくれた完璧な判定文をここに合流させます -->
+                                @if($item->likes->where('user_id', Auth::id())->isNotEmpty())
+                                    <img src="{{ asset('img/heart-pink.png') }}" alt="いいね解除" style="width: 24px; height: 24px;">
+                                @else
+                                    <img src="{{ asset('img/heart-default.png') }}" alt="いいね登録" style="width: 24px; height: 24px;">
+                                @endif
+                            </button>
+                        </form>
+                    @endauth
+
+                    @guest
+                        <!-- 💡 ログイン前（ゲスト）はクリックできないただのハートを表示します -->
+                        <img src="{{ asset('img/heart-default.png') }}" alt="いいね" style="width: 24px; height: 24px; opacity: 0.5;">
+                    @endguest
+                    
+                    <!-- いいねの合計数カウンター（仕様書項目） -->
                     <div style="font-size: 14px; color: #555; margin-top: 4px;">{{ $likesCount }}</div>
                 </div>
+
+                <!-- コメントカウンターエリア -->
                 <div style="text-align: center;">
                     <img src="{{ asset('img/comment-logo.png') }}" alt="コメント" style="width: 24px; height: 24px;">
                     <div style="font-size: 14px; color: #555; margin-top: 4px;">{{ $commentsCount }}</div>
                 </div>
             </div>
+
 
             <!-- 🛒 購入するボタン -->
             <a href="/purchase/{{ $item->id }}" style="display: block; text-align: center; background-color: #ff3333; color: white; text-decoration: none; padding: 15px; border-radius: 4px; font-size: 18px; font-weight: bold; margin-bottom: 40px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">

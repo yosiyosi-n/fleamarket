@@ -99,4 +99,35 @@ class ItemController extends Controller
         return redirect('/');
     }
 
+        /**
+     * いいねの登録・解除を切り替える（仕様書8番の裏側処理・修正版）
+     */
+    public function toggleLike($item_id)
+    {
+        // 💡 今ログインしているユーザーの「いいねデータ」を直接操作します
+        $user = \Illuminate\Support\Facades\Auth::user();
+
+        // もし何かの手違いでログインが外れていた場合は、安全のためにログイン画面へ戻します
+        if (!$user) {
+            return redirect('/login');
+        }
+
+        // 💡 ユーザーの過去のいいねの中から、この商品IDのものを検索
+        $like = $user->likes()->where('item_id', $item_id)->first();
+
+        if ($like) {
+            // ① すでにいいねがあれば「解除（削除）」
+            $like->delete();
+        } else {
+            // ② なければ「新しく登録」
+            $user->likes()->create([
+                'item_id' => $item_id,
+            ]);
+        }
+
+        // 画面をそのままで再読み込み（リフレッシュ）させます
+        return redirect()->back();
+    }
+
+
 }
