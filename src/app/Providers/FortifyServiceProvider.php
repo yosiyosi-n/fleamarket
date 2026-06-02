@@ -66,12 +66,14 @@ class FortifyServiceProvider extends ServiceProvider
         \Laravel\Fortify\Fortify::authenticateUsing(function (Request $request) {
             $user = \App\Models\User::where('email', $request->email)->first();
 
+            // パスワードが一致していればユーザー情報を返してログイン成功！
             if ($user && \Illuminate\Support\Facades\Hash::check($request->password, $user->password)) {
                 return $user;
             }
 
+            // ❌ 失敗した場合は、シンプルに直接日本語メッセージを投げます
             throw \Illuminate\Validation\ValidationException::withMessages([
-                'email' => [(new \App\Http\Requests\LoginRequest())->messages()['email.failed']],
+                'email' => ['ログイン情報が登録されていません。'],
             ]);
         });
     }

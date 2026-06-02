@@ -2,11 +2,10 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Contracts\Validation\Validator;
-use Illuminate\Validation\ValidationException;
+// 💡 修正：親のクラスを通常の「FormRequest」から「FortifyのLoginRequest」へ直接すり替えます
+use Laravel\Fortify\Http\Requests\LoginRequest as FortifyLoginRequest;
 
-class LoginRequest extends FormRequest
+class LoginRequest extends FortifyLoginRequest
 {
     /**
      * このチェック機能を誰にでも許可するか
@@ -38,15 +37,5 @@ class LoginRequest extends FormRequest
             'password.required' => 'パスワードを入力してください。',
             'email.failed' => 'ログイン情報が登録されていません。',
         ];
-    }
-
-    /**
-     * Fortifyにエラーを検知させて画面へ送り返すための処理
-     */
-    protected function failedValidation(Validator $validator)
-    {
-        throw (new ValidationException($validator))
-            ->errorBag($this->errorBag)
-            ->redirectTo($this->getRedirectUrl());
     }
 }

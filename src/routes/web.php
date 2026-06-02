@@ -20,6 +20,9 @@ use App\Http\Controllers\MypageController;
 Route::get('/', [ItemController::class, 'index'])->name('item.index');
 Route::get('/item/{item_id}', [ItemController::class, 'show'])->name('item.show');
 Route::get('/sell', [ItemController::class, 'create'])->name('item.create');
+Route::post('/sell', [ItemController::class, 'store']);
+Route::get('/sell', [ItemController::class, 'create'])->middleware('auth');
+Route::post('/sell', [ItemController::class, 'store'])->middleware('auth');
 
 // 2. 購入関連（PurchaseController）
 Route::get('/purchase/{item_id}', [PurchaseController::class, 'index'])->name('purchase.index');
