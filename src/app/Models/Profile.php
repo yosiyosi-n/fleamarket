@@ -8,4 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 class Profile extends Model
 {
     use HasFactory;
+
+    // ⬇︎ 【★ここを追加！】データベースへの保存・更新を許可する項目を並べます ⬇︎
+    protected $fillable = [
+        'user_id',
+        'name',
+        'image_path',
+        'postal_code',
+        'address',
+        'building',
+    ];
 }

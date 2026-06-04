@@ -29,6 +29,10 @@ Route::post('/item/{item_id}/like', [ItemController::class, 'toggleLike'])->midd
 // 2. 購入関連（PurchaseController）
 Route::get('/purchase/{item_id}', [PurchaseController::class, 'index'])->middleware('auth');
 Route::get('/purchase/address/{item_id}', [PurchaseController::class, 'editAddress'])->name('purchase.address')->middleware('auth');
+// ⬇︎ 【★ここを追加！】送付先住所の変更処理（保存・上書き） ⬇︎
+Route::post('/purchase/address/{item_id}', [PurchaseController::class, 'updateAddress'])->middleware('auth');
+// ⬇︎ 【★ここを追加！】商品購入確定処理（データベース保存） ⬇︎
+Route::post('/purchase/{item_id}', [PurchaseController::class, 'store'])->middleware('auth');
 
 
 // 3. プロフィール関連（MypageController）

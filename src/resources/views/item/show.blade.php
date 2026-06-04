@@ -60,10 +60,18 @@
             </div>
 
 
-            <!-- 🛒 購入するボタン -->
-            <a href="/purchase/{{ $item->id }}" style="display: block; text-align: center; background-color: #ff3333; color: white; text-decoration: none; padding: 15px; border-radius: 4px; font-size: 18px; font-weight: bold; margin-bottom: 40px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
-                購入する
-            </a>
+            <!-- 🛒 修正後：売切ガード付き購入ボタン -->
+            @if($item->purchases->isNotEmpty())
+                <!-- 💡 すでに購入履歴がある（売り切れ）の場合 -->
+                <div style="display: block; text-align: center; background-color: #bbb; color: white; padding: 15px; border-radius: 4px; font-size: 18px; font-weight: bold; margin-bottom: 40px; cursor: not-allowed;">
+                    売り切れました
+                </div>
+            @else
+                <!-- 💡 まだ誰にも買われていない（販売中）の場合のみボタンを表示 -->
+                <a href="/purchase/{{ $item->id }}" style="display: block; text-align: center; background-color: #ff3333; color: white; text-decoration: none; padding: 15px; border-radius: 4px; font-size: 18px; font-weight: bold; margin-bottom: 40px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                    購入する
+                </a>
+            @endif
 
             <!-- 📄 商品の説明（仕様書項目） -->
             <h2 style="font-size: 18px; border-bottom: 2px solid #333; padding-bottom: 8px; margin-bottom: 15px; color: #333;">商品説明</h2>

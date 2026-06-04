@@ -47,4 +47,10 @@ class User extends Authenticatable
     {
         return $this->hasMany(Like::class);
     }
+
+    public function profile()
+    {
+        // User は Profile を1つだけ持っている（hasOne）という関係を定義します
+        return $this->hasOne(Profile::class);
+    }
 }
