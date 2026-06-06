@@ -23,7 +23,7 @@
                 ¥{{ number_format($item->price) }} <span style="font-size: 14px; color: #666; font-weight: normal;">(税込)</span>
             </div>
 
-                        <!-- 📊 修正後：いいね(色変化＆データ送信対応)・コメント数カウンター表示エリア（仕様書項目） -->
+            <!-- 📊 修正後：いいね(色変化＆データ送信対応)・コメント数カウンター表示エリア（仕様書項目） -->
             <div style="display: flex; gap: 20px; margin-bottom: 30px; align-items: center;">
                 
                 <!-- 💡 いいねボタンエリア -->

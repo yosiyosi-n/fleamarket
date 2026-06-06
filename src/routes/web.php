@@ -39,3 +39,4 @@ Route::post('/purchase/{item_id}', [PurchaseController::class, 'store'])->middle
 // 💡 修正：マイページ関連も、未ログイン時のクラッシュを防ぐために鍵（auth）を付けました
 Route::get('/mypage', [MypageController::class, 'index'])->name('mypage.index')->middleware('auth');
 Route::get('/mypage/profile', [MypageController::class, 'edit'])->name('mypage.edit')->middleware('auth');
+Route::post('/mypage/profile', [MypageController::class, 'update'])->middleware('auth');
