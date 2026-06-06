@@ -23,9 +23,14 @@
 
         <!-- ⬇︎ ログイン(login)と登録(register)以外のページだけで表示する ⬇︎ -->
         @if(!request()->is('login') && !request()->is('register'))
-            <!-- 検索窓 -->
+            <!-- ⬇︎ 💡 修正後：仕様書6番の検索条件を完全に保持して送信する本物のフォーム ⬇︎ -->
             <div style="flex-grow: 1; max-width: 500px; margin: 0 20px;">
-                <input type="text" placeholder="なにをお探しですか？" style="width: 100%; padding: 8px 12px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;">
+                <form action="/" method="GET" style="margin: 0; display: flex;">
+                    <!-- タブの状態（recommend または mylist）を隠しデータ（hidden）として一緒に送ることで、タブが保持されます -->
+                    <input type="hidden" name="tab" value="{{ $tab ?? 'recommend' }}">
+                    
+                    <input type="text" name="search" value="{{ $search ?? '' }}" placeholder="なにをお探しですか？" style="width: 100%; padding: 8px 12px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; font-size: 15px;">
+                </form>
             </div>
 
             <!-- ナビゲーションメニュー -->

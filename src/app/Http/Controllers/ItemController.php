@@ -8,26 +8,50 @@ use Illuminate\Support\Facades\Auth;
 
 class ItemController extends Controller
 {
-    /**
-     * 商品一覧画面（トップ画面）を表示する
+        /**
+     * 商品一覧画面（トップ画面）を表示する（検索 ＆ マイリスト完全対応版）
      */
     public function index(Request $request)
     {
-        // 💡 1. データベースから商品を取得する土台を作る（購入履歴データも一緒に読み込む）
-        // ※のちほどリレーションを組むので、今の時点では「purchases」のままでOKです
+        // 💡 1. URLから「現在のタブ（おすすめ or マイリスト）」と「検索文字」を取得
+        $tab = $request->query('tab', 'recommend'); // デフォルトはおすすめ
+        $search = $request->query('search', '');     // デフォルトは空欄
+
+        // 💡 2. データベースから商品を取得する土台を作る
         $query = Item::with('purchases');
 
-        // 💡 2. 【仕様書の条件】「自分が出品した商品は表示されない」を実装
-        if (Auth::check()) {
-            $query->where('user_id', '!=', Auth::id());
+        // 💡 3. 【仕様書6番：商品検索機能】「商品名」で部分一致検索ができる
+        if (!empty($search)) {
+            $query->where('name', 'like', '%' . $search . '%');
+        }
+
+        // 💡 4. タブに応じた商品の出し分け（仕様書4番 ＆ 5番）
+        if ($tab === 'mylist') {
+            // ⭐ 【仕様書5番：マイリスト】いいねした商品だけを表示する
+            if (Auth::check()) {
+                // 自分がいいね（likes）した商品だけに厳しく絞り込みます
+                $query->whereHas('likes', function ($q) {
+                    $q->where('user_id', Auth::id());
+                });
+            } else {
+                // 【仕様書5番の条件】未認証の場合は何も表示されない
+                // 1件もヒットしない絶対にありえない条件（idが0）を入れて空っぽにします
+                $query->where('id', 0);
+            }
+        } else {
+            // 🛍️ 【仕様書4番：おすすめ】自分が出品した商品は表示されない
+            if (Auth::check()) {
+                $query->where('user_id', '!=', Auth::id());
+            }
         }
 
         // 最新順に並べ替えてデータを取得
         $items = $query->latest()->get();
 
-        // 💡 修正：コロン2つ「item::index」になっていたのを、正しいドット「item.index」に直しました
-        return view('item.index', compact('items'));
+        // 画面（views/item/index.blade.php）に全ての状態を渡して表示します
+        return view('item.index', compact('items', 'tab', 'search'));
     }
+
 
         /**
      * 商品詳細画面を表示する
