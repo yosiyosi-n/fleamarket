@@ -7,13 +7,34 @@ use Illuminate\Support\Facades\Auth;
 
 class MypageController extends Controller
 {
-    /**
-     * プロフィール画面（マイページ）を表示する
+        /**
+     * プロフィール画面（マイページ）を表示する（仕様書13番対応）
      */
-    public function index()
+    public function index(\Illuminate\Http\Request $request)
     {
-        return view('mypage.index');
+        $user = Auth::user();
+        $profile = $user->profile;
+
+        // 💡 仕様書のURLルール「?page=sell」または「?page=buy」を取得
+        $page = $request->query('page', 'sell'); // デフォルトは出品した商品にします
+
+        $items = collect(); // 商品を入れる空の箱を用意
+
+        if ($page === 'sell') {
+            // 💡 自分が「出品した」商品一覧を取得
+            $items = \App\Models\Item::where('user_id', $user->id)->latest()->get();
+        } elseif ($page === 'buy') {
+            // 💡 自分が「購入した」商品一覧を、購入履歴（purchases）を介して取得
+            // ※のちほどUserモデルにリレーションを組むので、今の時点ではこれでOKです
+            $items = \App\Models\Item::whereHas('purchases', function ($query) use ($user) {
+                $query->where('user_id', $user->id);
+            })->latest()->get();
+        }
+
+        // 画面（views/mypage/index.blade.php）にデータを渡して開きます
+        return view('mypage.index', compact('user', 'profile', 'page', 'items'));
     }
+
 
     /**
      * プロフィール編集画面を表示する（仕様書14番対応）
