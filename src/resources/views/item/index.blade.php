@@ -21,7 +21,7 @@
         </h2>
         
         <!-- 商品が並ぶグリッド -->
-        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px;">
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px;">
             
             @forelse($items as $item)
                 <a href="/item/{{ $item->id }}" style="background-color: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.1); text-decoration: none; color: #333; position: relative; display: block; border: 1px solid #e0e0e0;">
