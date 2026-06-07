@@ -84,7 +84,7 @@
                     <th style="text-align: left; padding: 15px 10px; width: 30%; color: #555; background-color: #fafafa;">カテゴリー</th>
                     <td style="padding: 15px 10px; display: flex; flex-wrap: wrap; gap: 8px;">
                         @foreach($item->categories as $category)
-                            <span style="background-color: #ff9900; color: white; padding: 4px 12px; border-radius: 15px; font-size: 14px; font-weight: bold;">
+                            <span style="background-color: #ff3333; color: white; padding: 4px 12px; border-radius: 15px; font-size: 14px; font-weight: bold;">
                                 {{ $category->name }}
                             </span>
                         @endforeach
