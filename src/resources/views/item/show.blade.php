@@ -19,7 +19,7 @@
             <h1 style="font-size: 28px; font-weight: bold; margin: 0 0 10px 0; color: #333;">{{ $item->name }}</h1>
             <p style="font-size: 16px; color: #666; margin: 0 0 20px 0;">{{ $item->brand ?? 'ブランド情報なし' }}</p>
             
-            <div style="font-size: 24px; font-weight: bold; color: #ff3333; margin-bottom: 25px;">
+            <div style="font-size: 24px; font-weight: bold; color: #333; margin-bottom: 25px;">
                 ¥{{ number_format($item->price) }} <span style="font-size: 14px; color: #666; font-weight: normal;">(税込)</span>
             </div>
 
@@ -69,42 +69,60 @@
             @else
                 <!-- 💡 まだ誰にも買われていない（販売中）の場合のみボタンを表示 -->
                 <a href="/purchase/{{ $item->id }}" style="display: block; text-align: center; background-color: #ff3333; color: white; text-decoration: none; padding: 15px; border-radius: 4px; font-size: 18px; font-weight: bold; margin-bottom: 40px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
-                    購入する
+                    購入手続きへ
                 </a>
             @endif
 
             <!-- 📄 商品の説明（仕様書項目） -->
-            <h2 style="font-size: 18px; border-bottom: 2px solid #333; padding-bottom: 8px; margin-bottom: 15px; color: #333;">商品説明</h2>
+            <h2 style="font-size: 18px; padding-bottom: 8px; margin-bottom: 15px; color: #333;">商品説明</h2>
             <p style="font-size: 16px; line-height: 1.6; color: #444; margin-bottom: 40px; white-space: pre-wrap;">{{ $item->description }}</p>
 
             <!-- ℹ️ 商品の情報テーブル（仕様書項目・複数カテゴリ対応） -->
-            <h2 style="font-size: 18px; border-bottom: 2px solid #333; padding-bottom: 8px; margin-bottom: 15px; color: #333;">商品情報</h2>
+            <h2 style="font-size: 18px; margin-bottom: 15px; color: #333;">商品情報</h2>
             <table style="width: 100%; border-collapse: collapse; margin-bottom: 40px; font-size: 16px;">
-                <tr style="border-bottom: 1px solid #e0e0e0;">
-                    <th style="text-align: left; padding: 15px 10px; width: 30%; color: #555; background-color: #fafafa;">カテゴリー</th>
+                <tr>
+                    <th style="text-align: left; width: 30%; color: #555;">カテゴリー</th>
                     <td style="padding: 15px 10px; display: flex; flex-wrap: wrap; gap: 8px;">
                         @foreach($item->categories as $category)
-                            <span style="background-color: #ff3333; color: white; padding: 4px 12px; border-radius: 15px; font-size: 14px; font-weight: bold;">
+                            <span style="background-color: #bbb; color: white; padding: 4px 12px; border-radius: 15px; font-size: 14px; font-weight: bold;">
                                 {{ $category->name }}
                             </span>
                         @endforeach
                     </td>
                 </tr>
-                <tr style="border-bottom: 1px solid #e0e0e0;">
-                    <th style="text-align: left; padding: 15px 10px; color: #555; background-color: #fafafa;">商品の状態</th>
+                <tr>
+                    <th style="text-align: left; color: #555;">商品の状態</th>
                     <td style="padding: 15px 10px; color: #333;">{{ $item->condition }}</td>
                 </tr>
             </table>
 
             <!-- 💬 過去のコメント一覧表示エリア（仕様書項目：ユーザー名と本文表示） -->
-            <h2 style="font-size: 18px; border-bottom: 2px solid #333; padding-bottom: 8px; margin-bottom: 20px; color: #333;">コメント ({{ $commentsCount }})</h2>
+            <h2 style="font-size: 18px; padding-bottom: 8px; margin-bottom: 20px; color: #333;">コメント ({{ $commentsCount }})</h2>
             <div style="margin-bottom: 30px;">
                 @forelse($item->comments as $comment)
-                    <div style="margin-bottom: 20px; background-color: #fafafa; padding: 15px; border-radius: 6px; border: 1px solid #e8e8e8;">
-                        <div style="font-weight: bold; font-size: 14px; color: #333; margin-bottom: 6px;">
-                            {{ $comment->user->name }} <span style="font-weight: normal; color: #999; font-size: 12px; margin-left: 10px;">{{ $comment->created_at->format('Y/m/d H:i') }}</span>
+                    <div style="margin-bottom: 20px;">
+                        <!-- 💡 ユーザー情報エリア（画像と名前を横並びにするために flex を指定） -->
+                        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
+                            
+                            <!-- 📸 【追加！】コメントしたユーザーのプロフィール画像枠 -->
+                            <div style="width: 32px; height: 32px; border-radius: 50%; background-color: #e0e0e0; overflow: hidden; display: flex; align-items: center; justify-content: center; border: 1px solid #ccc; flex-shrink: 0;">
+                                @if($comment->user->profile && $comment->user->profile->image_path)
+                                    <img src="{{ asset('storage/' . $comment->user->profile->image_path) }}" alt="ユーザー画像" style="width: 100%; height: 100%; object-fit: cover;">
+                                @else
+                                    <!-- 画像が未設定の場合はグレーの丸に小さなNO IMAGEかイニシャルなどを表示 -->
+                                    <span style="color: #999; font-size: 8px; font-weight: bold; transform: scale(0.8);">NO IMG</span>
+                                @endif
+                            </div>
+
+                            <!-- ユーザー名と投稿時間 -->
+                            <div style="font-weight: bold; font-size: 14px; color: #333;">
+                                {{ $comment->user->name }} 
+                                <span style="font-weight: normal; color: #999; font-size: 12px; margin-left: 10px;">{{ $comment->created_at->format('Y/m/d H:i') }}</span>
+                            </div>
                         </div>
-                        <p style="margin: 0; font-size: 15px; color: #444; line-height: 1.5; white-space: pre-wrap;">{{ $comment->comment }}</p>
+
+                        <!-- コメント本文 -->
+                        <p style="margin: 0; font-size: 15px; background-color: #bbb; color: #444; padding: 15px 15px; border-radius: 6px; line-height: 1.5; white-space: pre-wrap;">{{ $comment->comment }}</p>
                     </div>
                 @empty
                     <p style="color: #999; font-size: 15px;">コメントはまだありません。</p>
@@ -112,7 +130,7 @@
             </div>
 
             <!-- ⬇︎ 💡 コメント送信フォーム（仕様書9番対応） ⬇︎ -->
-            <div style="margin-top: 40px; background-color: #ffffff; padding: 25px; border-radius: 6px; border: 1px solid #e0e0e0;">
+            <div style="border-radius: 6px;">
                 <h3 style="font-size: 16px; font-weight: bold; margin: 0 0 15px 0; color: #333;">商品へのコメント</h3>
 
                 <!-- 💡 【仕様書の条件】ログイン済みのユーザーだけにフォームを表示 -->
