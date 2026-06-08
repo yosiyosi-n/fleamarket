@@ -19,12 +19,12 @@
             <h1 style="font-size: 28px; font-weight: bold; margin: 0 0 10px 0; color: #333;">{{ $item->name }}</h1>
             <p style="font-size: 16px; color: #666; margin: 0 0 20px 0;">{{ $item->brand ?? 'ブランド情報なし' }}</p>
             
-            <div style="font-size: 24px; font-weight: bold; color: #333; margin-bottom: 25px;">
+            <div style="font-size: 24px; font-weight: bold; color: #333; margin-bottom: 10px;">
                 ¥{{ number_format($item->price) }} <span style="font-size: 14px; color: #666; font-weight: normal;">(税込)</span>
             </div>
 
             <!-- 📊 修正後：いいね(色変化＆データ送信対応)・コメント数カウンター表示エリア（仕様書項目） -->
-            <div style="display: flex; gap: 20px; margin-bottom: 30px; align-items: center;">
+            <div style="display: flex; gap: 20px;     padding-left: 30px; margin-bottom: 15px; align-items: center;">
                 
                 <!-- 💡 いいねボタンエリア -->
                 <div style="text-align: center;">
@@ -78,7 +78,7 @@
             <p style="font-size: 16px; line-height: 1.6; color: #444; margin-bottom: 40px; white-space: pre-wrap;">{{ $item->description }}</p>
 
             <!-- ℹ️ 商品の情報テーブル（仕様書項目・複数カテゴリ対応） -->
-            <h2 style="font-size: 18px; margin-bottom: 15px; color: #333;">商品情報</h2>
+            <h2 style="font-size: 18px; margin-bottom: 15px; color: #333;">商品の情報</h2>
             <table style="width: 100%; border-collapse: collapse; margin-bottom: 40px; font-size: 16px;">
                 <tr>
                     <th style="text-align: left; width: 30%; color: #555;">カテゴリー</th>
