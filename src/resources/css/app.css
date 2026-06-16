@@ -29,8 +29,8 @@ input[type="checkbox"].category-checkbox {
     display: inline-flex;
     align-items: center;
     background-color: #ffffff;
-    color: #ff9900;
-    border: 2px solid #ff9900;
+    color: #ff3333;
+    border: 2px solid #ff3333;
     padding: 8px 16px;
     border-radius: 20px;
     cursor: pointer;
@@ -43,6 +43,6 @@ input[type="checkbox"].category-checkbox {
 /* ✨ ③ 選択時のスタイル（フォントが白色、その他がオレンジになる） */
 /* チェックボックスにチェックが入った直後のラベルを綺麗に反転させます */
 .category-checkbox:checked+.category-label {
-    background-color: #ff9900;
+    background-color: #ff3333;
     color: #ffffff;
 }

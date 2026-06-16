@@ -10,7 +10,25 @@
             <!-- 商品画像 -->
             <div style="margin-bottom: 30px;">
                 <label style="display: block; margin-bottom: 10px; font-weight: bold; color: #444;">商品画像</label>
-                <input type="file" name="image" accept="image/*" style="width: 100%; padding: 15px; border: 2px dashed {{ $errors->has('image') ? '#ff3333' : '#ccc' }}; border-radius: 4px; box-sizing: border-box; background-color: #f9f9f9; cursor: pointer;">
+                
+                <!-- 外側のグレーの点線枠エリア -->
+                <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px 20px; border: 2px dashed {{ $errors->has('image') ? '#ff3333' : '#ccc' }}; border-radius: 4px; background-color: #f9f9f9;">
+                    
+                    <!-- ⬇︎ 新設：Laravelのエラーで戻ってきたとき、直前に画像を選んでいたかを表示する ⬇︎ -->
+                    @if(old('image_selected') || $errors->has('image'))
+                        <div style="margin-bottom: 15px; font-size: 14px; font-weight: bold; color: #555; text-align: center;">
+                            ⚠️ セキュリティの仕組み上、画像の再選択が必要です
+                        </div>
+                    @endif
+                    
+                    <!-- 「押せるボタン」としてのデザイン -->
+                    <label style="display: inline-block; padding: 10px 20px; border: 1px solid #ff3333; border-radius: 4px; background-color: white; font-size: 15px; font-weight: bold; color: #ff3333; cursor: pointer; transition: background-color 0.2s; text-align: center;">
+                        画像を選択する
+                        
+                        <!-- 実際のファイル入力欄 -->
+                        <input type="file" name="image" accept="image/*" hidden>
+                    </label>
+                </div>
                 
                 @error('image')
                     <div style="color: #ff3333; font-size: 14px; margin-top: 5px;">{{ $message }}</div>
@@ -42,13 +60,11 @@
             <div style="margin-bottom: 30px;">
                 <label style="display: block; margin-bottom: 10px; font-weight: bold; color: #444;">商品の状態</label>
                 <select name="condition" style="width: 100%; padding: 12px; border: 1px solid {{ $errors->has('condition') ? '#ff3333' : '#ccc' }}; border-radius: 4px; box-sizing: border-box; background-color: white; font-size: 16px;">
-                    <option value="">選択してください</option>
-                    <option value="新品、未使用" {{ old('condition') == '新品、未使用' ? 'selected' : '' }}>新品、未使用</option>
-                    <option value="未使用に近い" {{ old('condition') == '未使用に近い' ? 'selected' : '' }}>未使用に近い</option>
+                    <option value="" {{ old('condition') == '' ? 'selected' : '' }} disabled hidden>選択してください</option>
+                    <option value="良好" {{ old('condition') == '良好' ? 'selected' : '' }}>良好</option>
                     <option value="目立った傷や汚れなし" {{ old('condition') == '目立った傷や汚れなし' ? 'selected' : '' }}>目立った傷や汚れなし</option>
                     <option value="やや傷や汚れあり" {{ old('condition') == 'やや傷や汚れあり' ? 'selected' : '' }}>やや傷や汚れあり</option>
-                    <option value="傷や汚れあり" {{ old('condition') == '傷や汚れあり' ? 'selected' : '' }}>傷や汚れあり</option>
-                    <option value="全体的に状態が悪い" {{ old('condition') == '全体的に状態が悪い' ? 'selected' : '' }}>全体的に状態が悪い</option>
+                    <option value="状態が悪い" {{ old('condition') == '状態が悪い' ? 'selected' : '' }}>状態が悪い</option>
                 </select>
                 <!-- ⬇︎ 商品の状態のエラーメッセージ表示 ⬇︎ -->
                 @error('condition')
@@ -84,14 +100,16 @@
                 @enderror
             </div>
 
-            <h3 style="font-size: 18px; border-bottom: 2px solid #333; padding-bottom: 8px; margin-bottom: 20px; color: #333;">販売価格</h3>
+            <h3 style="font-size: 18px; padding-bottom: 8px; margin-bottom: 20px; color: #333;">販売価格</h3>
 
             <!-- 販売価格 -->
             <div style="margin-bottom: 40px;">
-                <label style="display: block; margin-bottom: 10px; font-weight: bold; color: #444;">販売価格</label>
-                <div style="display: flex; align-items: center;">
-                    <span style="font-size: 20px; margin-right: 10px; font-weight: bold; color: #555;">¥</span>
-                    <input type="number" name="price" value="{{ old('price') }}" placeholder="300 〜 9,999,999" style="width: 100%; padding: 12px; border: 1px solid {{ $errors->has('price') ? '#ff3333' : '#ccc' }}; border-radius: 4px; box-sizing: border-box; font-size: 16px;">
+                <div style="display: flex; align-items: center; position: relative;">
+                    <!-- ⬇︎ 左側に固定する大きくて黒い「¥」マーク ⬇︎ -->
+                    <span style="position: absolute; left: 16px; font-size: 22px; font-weight: bold; color: #333;">¥</span>
+                    
+                    <!-- ⬇︎ 入力欄（左側に余白 padding-left: 40px を作って文字が重ならないようにしています） ⬇︎ -->
+                    <input type="number" name="price" value="{{ old('price') }}" placeholder="300 〜 9,999,999" style="width: 100%; padding: 12px 12px 12px 40px; border: 1px solid {{ $errors->has('price') ? '#ff3333' : '#ccc' }}; border-radius: 4px; box-sizing: border-box; font-size: 16px;">
                 </div>
                 <!-- ⬇︎ 販売価格のエラーメッセージ表示 ⬇︎ -->
                 @error('price')
