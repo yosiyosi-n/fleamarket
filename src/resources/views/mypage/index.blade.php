@@ -4,7 +4,7 @@
     <main style="max-width: 1024px; margin: 40px auto; padding: 0 20px;">
         
         <!-- 👤 🗂️ 上段：プロフィール情報エリア（仕様書項目） -->
-        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 40px; background-color: #ffffff; padding: 30px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.02); border: 1px solid #e0e0e0;">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 40px; padding: 30px 130px;">
             <div style="display: flex; align-items: center; gap: 25px;">
                 <!-- プロフィール画像（仕様書項目） -->
                 <div style="width: 100px; height: 100px; border-radius: 50%; background-color: #e0e0e0; overflow: hidden; display: flex; align-items: center; justify-content: center; border: 1px solid #ccc;">

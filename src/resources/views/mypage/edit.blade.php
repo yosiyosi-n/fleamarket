@@ -45,7 +45,7 @@
 
             <!-- ユーザー名（仕様書14番：初期値保持） -->
             <div style="margin-bottom: 25px;">
-                <label style="display: block; margin-bottom: 8px; font-weight: bold; color: #444;">ユーザー名</label>
+                <label style="display: block; font-weight: bold; color: #444;">ユーザー名</label>
                 <input type="text" name="name" value="{{ old('name', $profile->name ?? $user->name) }}" style="width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; font-size: 16px;">
                 <!-- 💡 ユーザー名エラーモニター -->
                 @error('name')
@@ -55,7 +55,7 @@
 
             <!-- 郵便番号（仕様書14番：初期値保持） -->
             <div style="margin-bottom: 25px;">
-                <label style="display: block; margin-bottom: 8px; font-weight: bold; color: #444;">郵便番号</label>
+                <label style="display: block; font-weight: bold; color: #444;">郵便番号</label>
                 <input type="text" name="postal_code" value="{{ old('postal_code', $profile->postal_code ?? '') }}" placeholder="123-4567" style="width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; font-size: 16px;">
                 <!-- 💡 郵便番号エラーモニター -->
                 @error('postal_code')
@@ -65,7 +65,7 @@
 
             <!-- 住所（仕様書14番：初期値保持） -->
             <div style="margin-bottom: 25px;">
-                <label style="display: block; margin-bottom: 8px; font-weight: bold; color: #444;">住所</label>
+                <label style="display: block; font-weight: bold; color: #444;">住所</label>
                 <input type="text" name="address" value="{{ old('address', $profile->address ?? '') }}" placeholder="東京都渋谷区宇田川町1-1" style="width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; font-size: 16px;">
                 <!-- 💡 住所エラーモニター -->
                 @error('address')
@@ -75,7 +75,7 @@
 
             <!-- 建物名・部屋番号 -->
             <div style="margin-bottom: 40px;">
-                <label style="display: block; margin-bottom: 8px; font-weight: bold; color: #444;">建物名（任意）</label>
+                <label style="display: block; font-weight: bold; color: #444;">建物名</label>
                 <input type="text" name="building" value="{{ old('building', $profile->building ?? '') }}" placeholder="コーチテックマンション 202" style="width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; font-size: 16px;">
             </div>
 
