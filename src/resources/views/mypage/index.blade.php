@@ -37,8 +37,8 @@
             </a>
         </div>
 
-        <!-- 📦 下段：商品一覧エリア（切り替わった中身がループで並びます） -->
-        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px;">
+        <!-- 📦 下段：商品一覧エリア（4列折り返し設定） -->
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px;">
             @forelse($items as $item)
                 <a href="/item/{{ $item->id }}" style="background-color: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.05); text-decoration: none; color: #333; border: 1px solid #e0e0e0; display: block;">
                     <div style="width: 100%; aspect-ratio: 1; background-color: #e0e0e0; display: flex; align-items: center; justify-content: center; color: #999;">
