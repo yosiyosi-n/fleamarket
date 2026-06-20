@@ -7,17 +7,35 @@
         <form action="/mypage/profile" method="POST" enctype="multipart/form-data">
             @csrf
 
-            <!-- プロフィール画像設定エリア -->
-            <div style="display: flex; align-items: center; gap: 20px; margin-bottom: 35px;">
-                <div style="width: 80px; height: 80px; border-radius: 50%; background-color: #e0e0e0; overflow: hidden; display: flex; align-items: center; justify-content: center; border: 1px solid #ccc;">
+            <!-- プロフィール画像設定エリア（赤枠ボタン化＆エラー案内付き） -->
+            <div style="display: flex; align-items: center; gap: 25px; margin-bottom: 35px; border: 1px dashed {{ $errors->has('image') ? '#ff3333' : 'transparent' }}; flex-wrap: wrap;">
+                
+                <!-- 現在のプロフィール画像丸枠 -->
+                <div style="width: 80px; height: 80px; border-radius: 50%; background-color: #e0e0e0; overflow: hidden; display: flex; align-items: center; justify-content: center; border: 1px solid #ccc; flex-shrink: 0;">
                     @if($profile && $profile->image_path)
                         <img src="{{ asset('storage/' . $profile->image_path) }}" alt="プロフィール画像" style="width: 100%; height: 100%; object-fit: cover;">
                     @else
                         <span style="color: #999; font-size: 12px; font-weight: bold;">NO IMAGE</span>
                     @endif
                 </div>
-                <div>
-                    <input type="file" name="image" accept="image/*" style="font-size: 14px;">
+
+                <!-- ボタン配置エリア -->
+                <div style="flex: 1; min-width: 200px;">
+                    <!-- ⬇︎ 出品画面と同じデザインの「押せる赤いボタン」 ⬇︎ -->
+                    <label style="display: inline-block; padding: 10px 20px; border: 1px solid #ff3333; border-radius: 10px; background-color: white; font-size: 14px; font-weight: bold; color: #ff3333; cursor: pointer; transition: background-color 0.2s; text-align: center; user-select: none;">
+                        画像を選択する
+                        
+                        <!-- 実際のファイル入力欄（hiddenで隠しますが、親のlabelのおかげでカチッと起動します） -->
+                        <input type="file" name="image" accept="image/*" hidden>
+                    </label>
+
+                    <!-- 💡 教材の範囲内（JavaScriptなし）で安全なエラー時の案内文 -->
+                    @if($errors->has('name') || $errors->has('postal_code') || $errors->has('address') || $errors->has('image'))
+                        <div style="font-size: 11px; font-weight: bold; color: #888; margin-top: 8px; line-height: 1.4;">
+                            ⚠️ 画面が戻った際は、セキュリティ上画像の再選択が必要です
+                        </div>
+                    @endif
+
                     <!-- 💡 画像エラーモニター -->
                     @error('image')
                         <div style="color: #ff3333; font-size: 14px; margin-top: 5px; font-weight: bold;">{{ $message }}</div>
