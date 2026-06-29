@@ -32,6 +32,10 @@
                     <option value="コンビニ払い" {{ $paymentMethod == 'コンビニ払い' ? 'selected' : '' }}>コンビニ払い</option>
                     <option value="カード払い" {{ $paymentMethod == 'カード払い' ? 'selected' : '' }}>カード払い</option>
                 </select>
+                <!-- ⬇︎ 💡 【ここに引っ越し！】選択欄のすぐ下に赤文字でエラーを表示させます ⬇︎ -->
+                @error('payment_method')
+                    <div style="color: #ff3333; font-size: 14px; margin-top: 8px; font-weight: bold;">{{ $message }}</div>
+                @enderror
             </div>
 
 
@@ -54,6 +58,10 @@
                         配送先住所が登録されていません。上の「変更する」から送付先住所を登録してください。
                     </div>
                 @endif
+                    <!-- ⬇︎ 💡 【ここに追加！】配送先住所に不備・未登録がある場合の赤文字モニター ⬇︎ -->
+                @error('address_error')
+                    <div style="color: #ff3333; font-size: 14px; margin-top: 10px; font-weight: bold;">{{ $message }}</div>
+                @enderror
             </div>
         </div>
 
@@ -79,13 +87,12 @@
                 <form action="/purchase/{{ $item->id }}" method="POST">
                     @csrf
                     <input type="hidden" name="payment_method" value="{{ $paymentMethod }}">
-
-                    <button type="submit" style="width: 100%; padding: 15px; background-color: #ff3333; color: white; border: none; border-radius: 4px; font-size: 18px; font-weight: bold; cursor: pointer;" {{ empty($paymentMethod) || !$profile ? 'disabled style=background-color:#ccc;cursor:not-allowed;' : '' }}>
+                    <!-- 💡 disabled 制御を一旦消して、未選択でもボタンを押せるようにします -->
+                    <button type="submit" style="width: 100%; padding: 15px; background-color: #ff3333; color: white; border: none; border-radius: 4px; font-size: 18px; font-weight: bold; cursor: pointer;">
                         購入する
                     </button>
                 </form>
             </div>
         </div>
-
     </main>
 </x-app-layout>

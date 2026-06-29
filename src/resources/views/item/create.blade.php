@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="title">商品の出品 - フリマアプリ</x-slot>
 
-    <div style="max-width: 600px; margin: 50px auto; padding: 40px; background-color: #ffffff; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
+    <div style="max-width: 600px; margin: 50px auto; padding: 40px;">
         <h2 style="text-align: center; margin-bottom: 40px; color: #333; font-size: 24px; font-weight: bold;">商品の出品</h2>
 
         <form action="/sell" method="POST" enctype="multipart/form-data">

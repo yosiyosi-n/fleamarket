@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="title">プロフィール設定 - フリマアプリ</x-slot>
 
-    <div style="max-width: 500px; margin: 60px auto; padding: 40px; background-color: #ffffff; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
+    <div style="max-width: 500px; margin: 60px auto; padding: 40px;">
         <h2 style="text-align: center; margin-bottom: 35px; color: #333; font-size: 24px; font-weight: bold;">プロフィール設定</h2>
 
         <form action="/mypage/profile" method="POST" enctype="multipart/form-data">

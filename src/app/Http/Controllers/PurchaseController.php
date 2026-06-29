@@ -55,7 +55,6 @@ class PurchaseController extends Controller
         $user->profile()->updateOrCreate(
             ['user_id' => $user->id], // 検索条件
             [
-                'name' => $request->name,
                 'postal_code' => $request->postal_code,
                 'address' => $request->address,
                 'building' => $request->building,
@@ -74,17 +73,49 @@ class PurchaseController extends Controller
         $user = Auth::user();
         $profile = $user->profile;
 
-        // 💡 仕様書12番：購入した商品に「その時の送付先住所」を紐づけて登録します
+        // 💡 1. まず先に「住所が未登録かどうか」をチェックして、不備があればエラーを記憶させます
+        $addressError = null;
+        if (!$profile || empty($profile->postal_code) || empty($profile->address)) {
+            $addressError = '配送先住所が登録されていないため、購入できません。';
+        }
+
+        // 💡 2. Laravelのバリデーションを実行します（ここで住所のエラーも一緒に合流させます）
+        $rules = [
+            'payment_method' => ['required', 'in:コンビニ払い,カード払い'],
+        ];
+
+        $messages = [
+            'payment_method.required' => '支払い方法を選択してください。',
+            'payment_method.in' => '正しい支払い方法を選択してください。',
+        ];
+
+        // 💡 3. もし住所エラーが見つかっていたら、バリデーションに強制的にエラーを注入します
+        if ($addressError) {
+            $validator = \Illuminate\Support\Facades\Validator::make($request->all(), $rules, $messages);
+            $validator->errors()->add('address_error', $addressError);
+            
+            // 支払い方法のエラーも同時に手動でチェックして、2つ揃った状態にします
+            if (empty($request->payment_method)) {
+                $validator->errors()->add('payment_method', '支払い方法を選択してください。');
+            }
+
+            return back()->withErrors($validator)->withInput();
+        }
+
+        // 💡 4. 住所が問題ない場合は、通常の支払い方法バリデーションを実行します
+        $request->validate($rules, $messages);
+
+        // 💡 5. すべての防衛線を突破したら、安全にデータベースに保存します
         \App\Models\Purchase::create([
             'user_id' => $user->id,
             'item_id' => $item_id,
-            'payment_method' => $request->payment_method, // 右側のフォームから隠しデータ（hidden）で届く支払い方法
+            'payment_method' => $request->payment_method,
             'postal_code' => $profile->postal_code,
             'address' => $profile->address,
             'building' => $profile->building,
         ]);
 
-        // 💡 購入がすべて完了したら、トップページ（商品一覧画面）へ戻します
         return redirect('/');
     }
+
 }
