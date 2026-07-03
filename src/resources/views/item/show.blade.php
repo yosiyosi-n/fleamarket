@@ -7,7 +7,6 @@
         <div style="flex: 1; min-width: 300px; max-width: 500px;">
             <div style="width: 100%; aspect-ratio: 1; background-color: #e0e0e0; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.05); display: flex; align-items: center; justify-content: center;">
                 @if($item->image_path)
-                    <!-- 💡 もし画像のパスが「http」から始まっていたらそのままURLを使い、そうでなければstorageフォルダから探す賢い仕組みです -->
                     @if(str_starts_with($item->image_path, 'http'))
                         <img src="{{ $item->image_path }}" alt="{{ $item->name }}" style="width: 100%; height: 100%; object-fit: cover;">
                     @else
@@ -28,10 +27,10 @@
                 ¥{{ number_format($item->price) }} <span style="font-size: 14px; color: #666; font-weight: normal;">(税込)</span>
             </div>
 
-            <!-- 💡 【ここから条件分岐】もし自分が出品した商品だったら（出品者モード） -->
+            <!-- 💡 【条件分岐】もし自分が出品した商品だったら（出品者モード） -->
             @if(Auth::check() && $item->user_id === Auth::id())
 
-                <!-- 🗑️ 出品取り消しボタン（購入手続きボタンと同じサイズ・赤色で配置） -->
+                <!-- 🗑️ 出品取り消しボタン（自分のときだけ出現） -->
                 <form action="/item/{{ $item->id }}/delete" method="POST" onsubmit="return confirm('本当にこの商品の出品を取り消しますか？');" style="margin-bottom: 40px;">
                     @csrf
                     @method('DELETE')
@@ -40,7 +39,7 @@
                     </button>
                 </form>
 
-            <!-- 💡 自分でない他人の商品だったら（通常の購入・いいね・コメントモード） -->
+            <!-- 💡 自分でない他人の商品、またはログイン前のゲストだったら（通常の購入・いいね・コメントモード） -->
             @else
 
                 <!-- 📊 いいね・コメント数カウンター表示エリア -->
@@ -78,6 +77,7 @@
                         売り切れました
                     </div>
                 @else
+                    <!-- 💡 ログイン前（ゲスト）でも他人の商品なら正しく「購入手続きへ」リンクが表示され、クリックでログイン画面へ誘導される王道ルートを確保！ -->
                     <a href="/purchase/{{ $item->id }}" style="display: block; text-align: center; background-color: #ff3333; color: white; text-decoration: none; padding: 15px; border-radius: 4px; font-size: 18px; font-weight: bold; margin-bottom: 40px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
                         購入手続きへ
                     </a>
@@ -113,27 +113,19 @@
             <div style="margin-bottom: 30px;">
                 @forelse($item->comments as $comment)
                     <div style="margin-bottom: 20px;">
-                        <!-- 💡 ユーザー情報エリア（画像と名前を横並びにするために flex を指定） -->
                         <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
-                            
-                            <!-- 📸 【追加！】コメントしたユーザーのプロフィール画像枠 -->
                             <div style="width: 32px; height: 32px; border-radius: 50%; background-color: #e0e0e0; overflow: hidden; display: flex; align-items: center; justify-content: center; border: 1px solid #ccc; flex-shrink: 0;">
                                 @if($comment->user->profile && $comment->user->profile->image_path)
                                     <img src="{{ asset('storage/' . $comment->user->profile->image_path) }}" alt="ユーザー画像" style="width: 100%; height: 100%; object-fit: cover;">
                                 @else
-                                    <!-- 画像が未設定の場合はグレーの丸に小さなNO IMAGEかイニシャルなどを表示 -->
                                     <span style="color: #999; font-size: 8px; font-weight: bold; transform: scale(0.8);">NO IMG</span>
                                 @endif
                             </div>
-
-                            <!-- ユーザー名と投稿時間 -->
                             <div style="font-weight: bold; font-size: 14px; color: #333;">
                                 {{ $comment->user->name }} 
                                 <span style="font-weight: normal; color: #999; font-size: 12px; margin-left: 10px;">{{ $comment->created_at->format('Y/m/d H:i') }}</span>
                             </div>
                         </div>
-
-                        <!-- コメント本文 -->
                         <p style="margin: 0; font-size: 15px; background-color: #bbb; color: #444; padding: 15px 15px; border-radius: 6px; line-height: 1.5; white-space: pre-wrap;">{{ $comment->comment }}</p>
                     </div>
                 @empty
@@ -145,18 +137,19 @@
             <div style="border-radius: 6px;">
                 <h3 style="font-size: 16px; font-weight: bold; margin: 0 0 15px 0; color: #333;">商品へのコメント</h3>
 
-                <!-- 💡 【仕様書の条件】ログイン済みのユーザーだけにフォームを表示 -->
                 @auth
                     <form action="/item/{{ $item->id }}/comment" method="POST">
                         @csrf
                         <textarea name="comment" rows="4" placeholder="コメントを入力してください（254文字以内）" style="width: 100%; padding: 12px; border: 1px solid {{ $errors->has('comment') ? '#ff3333' : '#ccc' }}; border-radius: 4px; box-sizing: border-box; font-size: 15px; resize: vertical; margin-bottom: 10px;">{{ old('comment') }}</textarea>
-                        
-                        <!-- ⬇︎ バリデーションエラーメッセージ ⬇︎ -->
                         @error('comment')
                             <div style="color: #ff3333; font-size: 14px; margin-bottom: 15px; font-weight: bold;">{{ $message }}</div>
                         @enderror
+                        <button type="submit" style="background-color: #ff3333; color: white; border: none; padding: 12px 24px; border-radius: 4px; font-size: 15px; font-weight: bold; cursor: pointer; width: 100%;">
+                            コメントを送信する
+                        </button>
+                    </form>
+                @endauth
 
-                <!-- 💡 【仕様書の条件】ログイン前のユーザーは送信できない（警告を表示） -->
                 @guest
                     <div style="background-color: #fcf8e3; border: 1px solid #faebcc; color: #8a6d3b; padding: 15px; border-radius: 4px; font-size: 14px; text-align: center; line-height: 1.5;">
                         コメントを投稿するには、先に <a href="/login" style="color: #66512c; font-weight: bold; text-decoration: underline;">ログイン</a> または <a href="/register" style="color: #66512c; font-weight: bold; text-decoration: underline;">会員登録</a> を行う必要があります。
