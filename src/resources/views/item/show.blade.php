@@ -3,16 +3,22 @@
 
     <main style="max-width: 1024px; margin: 40px auto; padding: 0 20px; display: flex; gap: 50px; flex-wrap: wrap;">
         
-        <!-- 📸 左側：商品画像エリア -->
+        <!-- 📸 左側：商品画像エリア（ダミーデータ＆手動出品両対応のハイブリッド仕様） -->
         <div style="flex: 1; min-width: 300px; max-width: 500px;">
             <div style="width: 100%; aspect-ratio: 1; background-color: #e0e0e0; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.05); display: flex; align-items: center; justify-content: center;">
                 @if($item->image_path)
-                    <img src="{{ asset('storage/' . $item->image_path) }}" alt="{{ $item->name }}" style="width: 100%; height: 100%; object-fit: cover;">
+                    <!-- 💡 もし画像のパスが「http」から始まっていたらそのままURLを使い、そうでなければstorageフォルダから探す賢い仕組みです -->
+                    @if(str_starts_with($item->image_path, 'http'))
+                        <img src="{{ $item->image_path }}" alt="{{ $item->name }}" style="width: 100%; height: 100%; object-fit: cover;">
+                    @else
+                        <img src="{{ asset('storage/' . $item->image_path) }}" alt="{{ $item->name }}" style="width: 100%; height: 100%; object-fit: cover;">
+                    @endif
                 @else
                     <span style="color: #999; font-size: 20px;">NO IMAGE</span>
                 @endif
             </div>
         </div>
+
 
         <!-- 📝 右側：商品情報・購入エリア -->
         <div style="flex: 1; min-width: 300px;">

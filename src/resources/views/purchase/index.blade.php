@@ -10,7 +10,11 @@
             <div style="display: flex; gap: 20px; border-bottom: 1px solid #e0e0e0; padding-bottom: 20px; margin-bottom: 30px;">
                 <div style="width: 120px; aspect-ratio: 1; background-color: #e0e0e0; border-radius: 4px; overflow: hidden; display: flex; align-items: center; justify-content: center;">
                     @if($item->image_path)
-                        <img src="{{ asset('storage/' . $item->image_path) }}" alt="{{ $item->name }}" style="width: 100%; height: 100%; object-fit: cover;">
+                        @if(str_starts_with($item->image_path, 'http'))
+                            <img src="{{ $item->image_path }}" alt="{{ $item->name }}" style="width: 100%; height: 100%; object-fit: cover;">
+                        @else
+                            <img src="{{ asset('storage/' . $item->image_path) }}" alt="{{ $item->name }}" style="width: 100%; height: 100%; object-fit: cover;">
+                        @endif
                     @else
                         <span style="color: #999; font-size: 14px;">NO IMAGE</span>
                     @endif

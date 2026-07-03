@@ -36,7 +36,12 @@
                     <!-- 商品画像エリア -->
                     <div style="width: 100%; aspect-ratio: 1; background-color: #e0e0e0; display: flex; align-items: center; justify-content: center; color: #999;">
                         @if($item->image_path)
-                            <img src="{{ asset('storage/' . $item->image_path) }}" alt="{{ $item->name }}" style="width: 100%; height: 100%; object-fit: cover;">
+                            <!-- ⬇︎ ネット画像とローカル画像のハイブリッド対応 ⬇︎ -->
+                            @if(str_starts_with($item->image_path, 'http'))
+                                <img src="{{ $item->image_path }}" alt="{{ $item->name }}" style="width: 100%; height: 100%; object-fit: cover;">
+                            @else
+                                <img src="{{ asset('storage/' . $item->image_path) }}" alt="{{ $item->name }}" style="width: 100%; height: 100%; object-fit: cover;">
+                            @endif
                         @else
                             NO IMAGE
                         @endif

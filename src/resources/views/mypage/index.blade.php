@@ -41,13 +41,20 @@
         <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px;">
             @forelse($items as $item)
                 <a href="/item/{{ $item->id }}" style="background-color: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.05); text-decoration: none; color: #333; border: 1px solid #e0e0e0; display: block;">
+                    <!-- 商品画像エリア（ダミーデータ対応版） -->
                     <div style="width: 100%; aspect-ratio: 1; background-color: #e0e0e0; display: flex; align-items: center; justify-content: center; color: #999;">
                         @if($item->image_path)
-                            <img src="{{ asset('storage/' . $item->image_path) }}" alt="{{ $item->name }}" style="width: 100%; height: 100%; object-fit: cover;">
+                            <!-- ⬇︎ 💡 ネット画像とローカル画像のハイブリッド対応をここにも合流！ ⬇︎ -->
+                            @if(str_starts_with($item->image_path, 'http'))
+                                <img src="{{ $item->image_path }}" alt="{{ $item->name }}" style="width: 100%; height: 100%; object-fit: cover;">
+                            @else
+                                <img src="{{ asset('storage/' . $item->image_path) }}" alt="{{ $item->name }}" style="width: 100%; height: 100%; object-fit: cover;">
+                            @endif
                         @else
                             NO IMAGE
                         @endif
                     </div>
+
                     <div style="padding: 12px;">
                         <div style="font-weight: bold; margin-bottom: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ $item->name }}</div>
                         <div style="color: #ff3333; font-weight: bold;">¥{{ number_format($item->price) }}</div>
