@@ -153,5 +153,24 @@ class ItemController extends Controller
         return redirect()->back();
     }
 
+        /**
+     * 出品を取り消す（商品を削除する）
+     */
+    public function destroy($item_id)
+    {
+        // 💡 1. データベースから削除対象の商品を取得
+        $item = Item::findOrFail($item_id);
+
+        // 💡 2. 安全対策：万が一他人がURLを直接叩いて削除しようとした場合をガード
+        if ($item->user_id !== Auth::id()) {
+            abort(403, '不正なアクセスです。');
+        }
+
+        // 💡 3. 商品をデータベースから完全に消去
+        $item->delete();
+
+        // 💡 4. 完了したら、トップページ（商品一覧）へシュパッと戻します！
+        return redirect('/')->with('success', '出品を取り消しました。');
+    }
 
 }

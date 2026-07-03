@@ -21,6 +21,7 @@ Route::get('/sell', [ItemController::class, 'create'])->name('item.create')->mid
 Route::post('/sell', [ItemController::class, 'store'])->middleware('auth');
 
 Route::post('/item/{item_id}/comment', [ItemController::class, 'storeComment'])->middleware('auth');
+Route::delete('/item/{item_id}/delete', [ItemController::class, 'destroy']);
 
 // 💡 修正：抜けていた「いいね機能」のルートをここに追加しました
 Route::post('/item/{item_id}/like', [ItemController::class, 'toggleLike'])->middleware('auth');
