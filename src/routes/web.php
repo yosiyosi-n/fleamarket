@@ -6,38 +6,58 @@ use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\MypageController;
 
 /*
-
 |--------------------------------------------------------------------------
 | Web Routes
 |--------------------------------------------------------------------------
 */
 
-// 1. 商品関連（ItemController）
+// ==========================================
+// 🔓 1. ログイン前（ゲスト）でも全員が見られるルート
+// ==========================================
 Route::get('/', [ItemController::class, 'index'])->name('item.index');
 Route::get('/item/{item_id}', [ItemController::class, 'show'])->name('item.show');
 
-// 💡 修正：重複を解消し、名前付きルートとログイン制限（auth）を綺麗に合流させました
-Route::get('/sell', [ItemController::class, 'create'])->name('item.create')->middleware('auth');
-Route::post('/sell', [ItemController::class, 'store'])->middleware('auth');
+// ==========================================
+// 🔒 2. ログイン必須（auth）、かつ【メール認証も完了している人】専用のルート
+// ==========================================
+// 💡 仕様書に基づき、未認証ユーザーがこれらのURLを開くと全自動で誘導画面へ引き戻されます
+Route::middleware(['auth', 'verified'])->group(function () {
+    
+    // 出品関連
+    Route::get('/sell', [ItemController::class, 'create'])->name('item.create');
+    Route::post('/sell', [ItemController::class, 'store']);
+    Route::delete('/item/{item_id}/delete', [ItemController::class, 'destroy']);
+    
+    // コメント・いいね
+    Route::post('/item/{item_id}/comment', [ItemController::class, 'storeComment']);
+    Route::post('/item/{item_id}/like', [ItemController::class, 'toggleLike']);
+    
+    // 購入手続き・確定
+    Route::get('/purchase/{item_id}', [PurchaseController::class, 'index']);
+    Route::post('/purchase/{item_id}', [PurchaseController::class, 'store']);
+    
+    // マイページトップ（購入・出品一覧タブ含む）
+    Route::get('/mypage', [MypageController::class, 'index'])->name('mypage.index');
+});
 
-Route::post('/item/{item_id}/comment', [ItemController::class, 'storeComment'])->middleware('auth');
-Route::delete('/item/{item_id}/delete', [ItemController::class, 'destroy']);
+// ==========================================
+// 🔓 3. ログイン必須（auth）だが【メール認証が未完了】でも特別に入れるルート
+// ==========================================
+Route::middleware(['auth'])->group(function () {
+    
+    // 💡 仕様書4番：認証メール誘導画面（PG04）
+    Route::get('/email/verify', function () {
+        return view('auth.verify-email');
+    })->name('verification.notice');
 
-// 💡 修正：抜けていた「いいね機能」のルートをここに追加しました
-Route::post('/item/{item_id}/like', [ItemController::class, 'toggleLike'])->middleware('auth');
+    // 💡 仕様書対応：認証メールを「再送信」するためのルート（後ろに @store を合流させてロックを解除！）
+    Route::post('/email/verification-notification', [\Laravel\Fortify\Http\Controllers\EmailVerificationNotificationController::class, 'store'])
+        ->middleware(['throttle:6,1'])
+        ->name('verification.send');
 
-
-// 2. 購入関連（PurchaseController）
-Route::get('/purchase/{item_id}', [PurchaseController::class, 'index'])->middleware('auth');
-Route::get('/purchase/address/{item_id}', [PurchaseController::class, 'editAddress'])->name('purchase.address')->middleware('auth');
-// ⬇︎ 【★ここを追加！】送付先住所の変更処理（保存・上書き） ⬇︎
-Route::post('/purchase/address/{item_id}', [PurchaseController::class, 'updateAddress'])->middleware('auth');
-// ⬇︎ 【★ここを追加！】商品購入確定処理（データベース保存） ⬇︎
-Route::post('/purchase/{item_id}', [PurchaseController::class, 'store'])->middleware('auth');
-
-
-// 3. プロフィール関連（MypageController）
-// 💡 修正：マイページ関連も、未ログイン時のクラッシュを防ぐために鍵（auth）を付けました
-Route::get('/mypage', [MypageController::class, 'index'])->name('mypage.index')->middleware('auth');
-Route::get('/mypage/profile', [MypageController::class, 'edit'])->name('mypage.edit')->middleware('auth');
-Route::post('/mypage/profile', [MypageController::class, 'update'])->middleware('auth');
+    // 💡 仕様書4番：認証完了の着陸先 ＆ 住所変更用ルート
+    Route::get('/mypage/profile', [MypageController::class, 'edit'])->name('mypage.edit');
+    Route::post('/mypage/profile', [MypageController::class, 'update']);
+    Route::get('/purchase/address/{item_id}', [PurchaseController::class, 'editAddress'])->name('purchase.address');
+    Route::post('/purchase/address/{item_id}', [PurchaseController::class, 'updateAddress']);
+});

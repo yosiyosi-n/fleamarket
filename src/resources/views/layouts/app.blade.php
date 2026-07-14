@@ -22,7 +22,7 @@
 
 
         <!-- ⬇︎ ログイン(login)と登録(register)以外のページだけで表示する ⬇︎ -->
-        @if(!request()->is('login') && !request()->is('register'))
+        @if(!request()->is('login') && !request()->is('register') && !request()->is('email/verify'))
             <!-- ⬇︎ 💡 修正後：仕様書6番の検索条件を完全に保持して送信する本物のフォーム ⬇︎ -->
             <div style="flex-grow: 1; max-width: 500px; margin: 0 20px;">
                 <form action="/" method="GET" style="margin: 0; display: flex;">
