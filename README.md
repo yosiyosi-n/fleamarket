@@ -40,7 +40,7 @@
 
 ### 1. リポジトリのクローンと移動
 ```bash
-git clone git@github.com:yatyou/-.git fleamarket
+git clone https://github.com/yosiyosi-n/fleamarket.git
 cd fleamarket
 ```
 
@@ -63,7 +63,6 @@ docker-compose exec php bash
 ### 4. ライブラリのインストール
 ```bash
 composer install
-npm install && npm run build
 ```
 
 ### 5. 環境設定ファイルの準備 ＆ 設定変更
