@@ -36,78 +36,47 @@
 
 ## 🚀 環境構築手順 (Docker環境版)
 
-手元のPC（ローカル環境）にクローンしたのち、以下の手順で実行してください。
+1. **リポジトリのクローンと移動**
+   ```bash
+   git clone https://github.com/yosiyosi-n/fleamarket.git
+   cd fleamarket
+   ```
 
-### 1. リポジトリのクローンと移動
-```bash
-git clone https://github.com/yosiyosi-n/fleamarket.git
-cd fleamarket
-```
+2. **Dockerコンテナの起動**
+   ```bash
+   docker-compose up -d
+   ```
 
-### 2. Dockerコンテナの起動
-※事前に Docker Desktop アプリを起動しておいてください。
-```bash
-docker-compose up -d
-```
+3. **コンテナ内部での初期設定** (以下、コンテナ内で実行)
+   ```bash
+   docker-compose exec php bash
+   composer install
+   cp .env.example .env
+   ```
+   ※ `.env` のデータベース（DB_HOST=mysql）とメール（MAIL_HOST=mailhog）の設定を修正してください。
 
-### 3. PHPコンテナの内部に入る
-各種コマンドを実行するため、アプリが動いているサーバー（コンテナ）の中に入ります。
-```bash
-docker-compose exec php bash
-```
+   ```env
+   DB_CONNECTION=mysql
+   DB_HOST=mysql
+   DB_DATABASE=laravel_db
+   DB_USERNAME=root
+   DB_PASSWORD=root
 
+   MAIL_MAILER=smtp
+   MAIL_HOST=mailhog
+   MAIL_PORT=1025
+   MAIL_FROM_ADDRESS="noreply@fleamarket.com"
+   MAIL_FROM_NAME="フリマアプリ運営事務局"
+   ```
+
+   ```bash
+   php artisan key:generate
+   php artisan migrate:fresh --seed
+   php artisan optimize:clear
+   exit
+   ```
 ---
-💡 **これ以降のコマンド（手順4〜7）は、コンテナの内部（root@5c910f6a084b:/var/www#）で実行してください。**
----
-
-### 4. ライブラリのインストール
-```bash
-composer install
-```
-
-### 5. 環境設定ファイルの準備 ＆ 設定変更
-```bash
-cp .env.example .env
-```
-💡 **コピーした `.env` ファイルを開き、データベース接続設定を Docker環境（`docker-compose.yml`）に合わせて必ず以下のように修正してください。**
-```env
-DB_CONNECTION=mysql
-DB_HOST=mysql
-DB_PORT=3306
-DB_DATABASE=laravel_db
-DB_USERNAME=root
-DB_PASSWORD=root
-
-MAIL_MAILER=smtp
-MAIL_HOST=mailhog
-MAIL_PORT=1025
-MAIL_FROM_ADDRESS="noreply@fleamarket.com"
-MAIL_FROM_NAME="フリマアプリ運営事務局"
-```
-修正・保存したら、コンテナ内でアプリケーションキーを生成します。
-```bash
-php artisan key:generate
-```
-
-### 6. マイグレーションと指定ダミーデータの実行
-データベースを完全に更地にしたのち、スプレッドシート指定の全10品（画像URL完全連動）およびテスト用出品者ユーザーを自動で一括注入します。
-```bash
-php artisan migrate:fresh --seed
-```
-
-### 7. 最適化キャッシュのクリア ＆ コンテナからの脱出
-```bash
-php artisan optimize:clear
-exit
-```
-
----
-
-コンテナから脱出（exit）したら構築完了です！
-ブラウザで `http://localhost` にアクセスして動作確認を行ってください。
-また、送信された認証メールは `http://localhost:8025` (MailHog) から確認・検証可能です。
+**動作確認**: [http://localhost](http://localhost) (アプリ) / [http://localhost:8025](http://localhost:8025) (MailHog)
 
 ## 📊 データベース設計 (ER図)
-プロジェクトのルールに基づき、お名前（name）項目を引き算して最適化したプロフィール構造を反映したER図です。
-ルート直下にある `fleamarket.drawio.png` を参照してください。
-![データベースER図](fleamarket.drawio.png)
+ルート直下の `fleamarket.drawio.png` を参照。
