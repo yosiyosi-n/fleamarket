@@ -86,5 +86,14 @@ class FortifyServiceProvider extends ServiceProvider
                 }
             };
         });
-    } // ← bootメソッドの終わりのカッコ
+
+        // ⬇︎ 💡 【これが本当の最後のピース！】メール内の認証ボタンをポチッと押して「認証が完了した瞬間」だけ、狙い撃ちでプロフィール画面へ飛ばします！ ⬇︎
+        $this->app->singleton(\Laravel\Fortify\Contracts\VerifyEmailResponse::class, function () {
+            return new class implements \Laravel\Fortify\Contracts\VerifyEmailResponse {
+                public function toResponse($request) {
+                    return redirect('/mypage/profile');
+                }
+            };
+        });
+    }
 }
