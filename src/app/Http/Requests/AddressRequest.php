@@ -16,7 +16,7 @@ class AddressRequest extends FormRequest
         return [
             'postal_code' => ['required', 'string', 'max:255'],
             'address' => ['required', 'string', 'max:255'],
-            'building' => ['nullable', 'string', 'max:255'], // 💡 建物名は入力なしでもOK（nullable）
+            'building' => ['nullable', 'string', 'max:255'],
         ];
     }
 

@@ -12,15 +12,14 @@ use App\Http\Controllers\MypageController;
 */
 
 // ==========================================
-// 🔓 1. ログイン前（ゲスト）でも全員が見られるルート
+// 1. ログイン前（ゲスト）でも全員が見られるルート
 // ==========================================
 Route::get('/', [ItemController::class, 'index'])->name('item.index');
 Route::get('/item/{item_id}', [ItemController::class, 'show'])->name('item.show');
 
 // ==========================================
-// 🔒 2. ログイン必須（auth）、かつ【メール認証も完了している人】専用のルート
+// 2. ログイン必須（auth）、かつ【メール認証も完了している人】専用のルート
 // ==========================================
-// 💡 仕様書に基づき、未認証ユーザーがこれらのURLを開くと全自動で誘導画面へ引き戻されます
 Route::middleware(['auth', 'verified'])->group(function () {
     
     // 出品関連
@@ -41,21 +40,19 @@ Route::middleware(['auth', 'verified'])->group(function () {
 });
 
 // ==========================================
-// 🔓 3. ログイン必須（auth）だが【メール認証が未完了】でも特別に入れるルート
+// 3. ログイン必須（auth）だが【メール認証が未完了】でも特別に入れるルート
 // ==========================================
 Route::middleware(['auth'])->group(function () {
     
-    // 💡 仕様書4番：認証メール誘導画面（PG04）
+    // 認証メール誘導画面
     Route::get('/email/verify', function () {
         return view('auth.verify-email');
     })->name('verification.notice');
-
-    // 💡 仕様書対応：認証メールを「再送信」するためのルート（後ろに @store を合流させてロックを解除！）
     Route::post('/email/verification-notification', [\Laravel\Fortify\Http\Controllers\EmailVerificationNotificationController::class, 'store'])
         ->middleware(['throttle:6,1'])
         ->name('verification.send');
 
-    // 💡 仕様書4番：認証完了の着陸先 ＆ 住所変更用ルート
+    // 認証完了の着陸先 ＆ 住所変更用ルート
     Route::get('/mypage/profile', [MypageController::class, 'edit'])->name('mypage.edit');
     Route::post('/mypage/profile', [MypageController::class, 'update']);
     Route::get('/purchase/address/{item_id}', [PurchaseController::class, 'editAddress'])->name('purchase.address');

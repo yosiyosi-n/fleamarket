@@ -2,13 +2,12 @@
 
 namespace App\Http\Requests;
 
-// 💡 修正：親のクラスを通常の「FormRequest」から「FortifyのLoginRequest」へ直接すり替えます
 use Laravel\Fortify\Http\Requests\LoginRequest as FortifyLoginRequest;
 
 class LoginRequest extends FortifyLoginRequest
 {
     /**
-     * このチェック機能を誰にでも許可するか
+     * チェック機能を誰にでも許可
      */
     public function authorize(): bool
     {

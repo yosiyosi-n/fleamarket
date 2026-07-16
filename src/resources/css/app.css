@@ -11,7 +11,6 @@
     }
 }
 
-/* ① 元のチェックボックスを安全に隠す（詳細度を保つためタグとクラスを指定） */
 input[type="checkbox"].category-checkbox {
     position: absolute;
     width: 1px;
@@ -24,7 +23,6 @@ input[type="checkbox"].category-checkbox {
     border: 0;
 }
 
-/* 🟠 ② 未選択時のスタイル（外枠とフォントのみオレンジ色、背景は白） */
 .category-label {
     display: inline-flex;
     align-items: center;
@@ -40,8 +38,6 @@ input[type="checkbox"].category-checkbox {
     transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-/* ✨ ③ 選択時のスタイル（フォントが白色、その他がオレンジになる） */
-/* チェックボックスにチェックが入った直後のラベルを綺麗に反転させます */
 .category-checkbox:checked+.category-label {
     background-color: #ff3333;
     color: #ffffff;

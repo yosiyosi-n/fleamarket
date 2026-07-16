@@ -11,7 +11,6 @@
             <div style="margin-bottom: 20px;">
                 <label style="display: block; margin-bottom: 8px; font-weight: bold; color: #555;">郵便番号</label>
                 <input type="text" name="postal_code" value="{{ old('postal_code', $profile->postal_code ?? '') }}" placeholder="123-4567" style="width: 100%; padding: 12px; border: 1px solid {{ $errors->has('postal_code') ? '#ff3333' : '#ccc' }}; border-radius: 4px; box-sizing: border-box; font-size: 16px;">
-                <!-- 💡 郵便番号のエラーモニター -->
                 @error('postal_code')
                     <div style="color: #ff3333; font-size: 14px; margin-top: 5px; font-weight: bold;">{{ $message }}</div>
                 @enderror
@@ -21,19 +20,18 @@
             <div style="margin-bottom: 20px;">
                 <label style="display: block; margin-bottom: 8px; font-weight: bold; color: #555;">住所</label>
                 <input type="text" name="address" value="{{ old('address', $profile->address ?? '') }}" placeholder="東京都渋谷区宇田川町1-1" style="width: 100%; padding: 12px; border: 1px solid {{ $errors->has('address') ? '#ff3333' : '#ccc' }}; border-radius: 4px; box-sizing: border-box; font-size: 16px;">
-                <!-- 💡 住所のエラーモニター -->
                 @error('address')
                     <div style="color: #ff3333; font-size: 14px; margin-top: 5px; font-weight: bold;">{{ $message }}</div>
                 @enderror
             </div>
 
-            <!-- 建物名（任意） -->
+            <!-- 建物名 -->
             <div style="margin-bottom: 35px;">
                 <label style="display: block; margin-bottom: 8px; font-weight: bold; color: #555;">建物名</label>
                 <input type="text" name="building" value="{{ old('building', $profile->building ?? '') }}" placeholder="コーチテックビル 101" style="width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; font-size: 16px;">
             </div>
 
-            <!-- 更新するボタン -->
+            <!-- 更新ボタン -->
             <button type="submit" style="width: 100%; padding: 15px; background-color: #ff3333; color: white; border: none; border-radius: 4px; font-size: 16px; font-weight: bold; cursor: pointer;">
                 更新する
             </button>

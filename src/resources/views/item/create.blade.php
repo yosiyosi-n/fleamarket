@@ -11,21 +11,17 @@
             <div style="margin-bottom: 30px;">
                 <label style="display: block; margin-bottom: 10px; font-weight: bold; color: #444;">商品画像</label>
                 
-                <!-- 外側のグレーの点線枠エリア -->
                 <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px 20px; border: 2px dashed {{ $errors->has('image') ? '#ff3333' : '#ccc' }}; border-radius: 4px; background-color: #f9f9f9;">
                     
-                    <!-- ⬇︎ 新設：Laravelのエラーで戻ってきたとき、直前に画像を選んでいたかを表示する ⬇︎ -->
                     @if(old('image_selected') || $errors->has('image'))
                         <div style="margin-bottom: 15px; font-size: 14px; font-weight: bold; color: #555; text-align: center;">
                             ⚠️ セキュリティの仕組み上、画像の再選択が必要です
                         </div>
                     @endif
                     
-                    <!-- 「押せるボタン」としてのデザイン -->
                     <label style="display: inline-block; padding: 10px 20px; border: 1px solid #ff3333; border-radius: 4px; background-color: white; font-size: 15px; font-weight: bold; color: #ff3333; cursor: pointer; transition: background-color 0.2s; text-align: center;">
                         画像を選択する
                         
-                        <!-- 実際のファイル入力欄 -->
                         <input type="file" name="image" accept="image/*" hidden>
                     </label>
                 </div>
@@ -50,7 +46,6 @@
                         </div>
                     @endforeach
                 </div>
-                <!-- ⬇︎ カテゴリーのエラーメッセージ表示 ⬇︎ -->
                 @error('categories')
                     <div style="color: #ff3333; font-size: 14px; margin-top: 5px;">{{ $message }}</div>
                 @enderror
@@ -66,7 +61,6 @@
                     <option value="やや傷や汚れあり" {{ old('condition') == 'やや傷や汚れあり' ? 'selected' : '' }}>やや傷や汚れあり</option>
                     <option value="状態が悪い" {{ old('condition') == '状態が悪い' ? 'selected' : '' }}>状態が悪い</option>
                 </select>
-                <!-- ⬇︎ 商品の状態のエラーメッセージ表示 ⬇︎ -->
                 @error('condition')
                     <div style="color: #ff3333; font-size: 14px; margin-top: 5px;">{{ $message }}</div>
                 @enderror
@@ -78,7 +72,6 @@
             <div style="margin-bottom: 25px;">
                 <label style="display: block; margin-bottom: 10px; font-weight: bold; color: #444;">商品名</label>
                 <input type="text" name="name" value="{{ old('name') }}" placeholder="商品名（40文字まで）" style="width: 100%; padding: 12px; border: 1px solid {{ $errors->has('name') ? '#ff3333' : '#ccc' }}; border-radius: 4px; box-sizing: border-box; font-size: 16px;">
-                <!-- ⬇︎ 商品名のエラーメッセージ表示 ⬇︎ -->
                 @error('name')
                     <div style="color: #ff3333; font-size: 14px; margin-top: 5px;">{{ $message }}</div>
                 @enderror
@@ -94,7 +87,6 @@
             <div style="margin-bottom: 30px;">
                 <label style="display: block; margin-bottom: 10px; font-weight: bold; color: #444;">商品の説明</label>
                 <textarea name="description" rows="6" placeholder="商品の説明（色、素材、重さ、定価、注意点など）" style="width: 100%; padding: 12px; border: 1px solid {{ $errors->has('description') ? '#ff3333' : '#ccc' }}; border-radius: 4px; box-sizing: border-box; font-size: 16px; resize: vertical;">{{ old('description') }}</textarea>
-                <!-- ⬇︎ 商品の説明のエラーメッセージ表示 ⬇︎ -->
                 @error('description')
                     <div style="color: #ff3333; font-size: 14px; margin-top: 5px;">{{ $message }}</div>
                 @enderror
@@ -105,13 +97,9 @@
             <!-- 販売価格 -->
             <div style="margin-bottom: 40px;">
                 <div style="display: flex; align-items: center; position: relative;">
-                    <!-- ⬇︎ 左側に固定する大きくて黒い「¥」マーク ⬇︎ -->
                     <span style="position: absolute; left: 16px; font-size: 22px; font-weight: bold; color: #333;">¥</span>
-                    
-                    <!-- ⬇︎ 入力欄（左側に余白 padding-left: 40px を作って文字が重ならないようにしています） ⬇︎ -->
                     <input type="number" name="price" value="{{ old('price') }}" placeholder="300 〜 9,999,999" style="width: 100%; padding: 12px 12px 12px 40px; border: 1px solid {{ $errors->has('price') ? '#ff3333' : '#ccc' }}; border-radius: 4px; box-sizing: border-box; font-size: 16px;">
                 </div>
-                <!-- ⬇︎ 販売価格のエラーメッセージ表示 ⬇︎ -->
                 @error('price')
                     <div style="color: #ff3333; font-size: 14px; margin-top: 5px;">{{ $message }}</div>
                 @enderror

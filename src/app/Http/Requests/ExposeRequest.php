@@ -7,7 +7,7 @@ use Illuminate\Foundation\Http\FormRequest;
 class ExposeRequest extends FormRequest
 {
     /**
-     * このチェック機能を誰にでも許可するか
+     * チェック機能を誰にでも許可
      */
     public function authorize(): bool
     {
@@ -15,7 +15,7 @@ class ExposeRequest extends FormRequest
     }
 
     /**
-     * 仕様書15番の項目をチェックするバリデーションルール
+     * バリデーションルール
      */
     public function rules(): array
     {
@@ -24,14 +24,14 @@ class ExposeRequest extends FormRequest
             'description' => ['required', 'string'],
             'condition' => ['required', 'string'],
             'price' => ['required', 'integer', 'min:300', 'max:9999999'],
-            'categories' => ['required', 'array', 'min:1'], // 最低1つ以上のカテゴリ選択を必須にします
-            'image' => ['required', 'image', 'mimes:jpeg,png,jpg', 'max:2048'], // 画像ファイルを必須にします
-            'brand' => ['nullable', 'string', 'max:255'], // ブランド名は任意（空欄OK）
+            'categories' => ['required', 'array', 'min:1'],
+            'image' => ['required', 'image', 'mimes:jpeg,png,jpg', 'max:2048'],
+            'brand' => ['nullable', 'string', 'max:255'],
         ];
     }
 
     /**
-     * 画面に表示する丁寧な日本語エラーメッセージ
+     * 画面に表示する日本語エラーメッセージ
      */
     public function messages(): array
     {

@@ -21,7 +21,7 @@ class Item extends Model
     ];
 
     /**
-     * 🔗 1. カテゴリとの多対多リレーション
+     *  カテゴリとの多対多リレーション
      */
     public function categories()
     {
@@ -29,8 +29,7 @@ class Item extends Model
     }
 
     /**
-     * 🔗 2. 【★ここが原因！】いいね機能との1対多リレーション
-     * これが抜けていたため、RelationNotFoundException が発生していました
+     *  いいね機能との1対多リレーション
      */
     public function likes()
     {
@@ -38,7 +37,7 @@ class Item extends Model
     }
 
     /**
-     * 🔗 3. コメント機能との1対多リレーション
+     *  コメント機能との1対多リレーション
      */
     public function comments()
     {
@@ -46,7 +45,7 @@ class Item extends Model
     }
 
     /**
-     * 🔗 4. 購入履歴との1対多リレーション
+     *  購入履歴との1対多リレーション
      */
     public function purchases()
     {

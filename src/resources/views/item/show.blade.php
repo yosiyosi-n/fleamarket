@@ -3,7 +3,7 @@
 
     <main style="max-width: 1024px; margin: 40px auto; padding: 0 20px; display: flex; gap: 50px; flex-wrap: wrap;">
         
-        <!-- 📸 左側：商品画像エリア（ダミーデータ＆手動出品両対応のハイブリッド仕様） -->
+        <!-- 左側：商品画像エリア -->
         <div style="flex: 1; min-width: 300px; max-width: 500px;">
             <div style="width: 100%; aspect-ratio: 1; background-color: #e0e0e0; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.05); display: flex; align-items: center; justify-content: center;">
                 @if($item->image_path)
@@ -18,7 +18,7 @@
             </div>
         </div>
 
-        <!-- 📝 右側：商品情報・購入エリア -->
+        <!-- 右側：商品情報・購入エリア -->
         <div style="flex: 1; min-width: 300px;">
             <h1 style="font-size: 28px; font-weight: bold; margin: 0 0 10px 0; color: #333;">{{ $item->name }}</h1>
             <p style="font-size: 16px; color: #666; margin: 0 0 20px 0;">{{ $item->brand ?? 'ブランド情報なし' }}</p>
@@ -27,10 +27,10 @@
                 ¥{{ number_format($item->price) }} <span style="font-size: 14px; color: #666; font-weight: normal;">(税込)</span>
             </div>
 
-            <!-- 💡 【条件分岐】もし自分が出品した商品だったら（出品者モード） -->
+            <!--【条件分岐】もし自分が出品した商品だったら（出品者モード） -->
             @if(Auth::check() && $item->user_id === Auth::id())
 
-                <!-- 🗑️ 出品取り消しボタン -->
+                <!-- 出品取り消しボタン -->
                 <form action="/item/{{ $item->id }}/delete" method="POST" onsubmit="return confirm('本当にこの商品の出品を取り消しますか？');" style="margin-bottom: 40px;">
                     @csrf
                     @method('DELETE')
@@ -39,11 +39,9 @@
                     </button>
                 </form>
 
-            <!-- 💡 自分でない他人の商品、またはログイン前のゲストだったら（通常の購入・いいね・コメントモード） -->
             @else
 
-
-                <!-- 📊 いいね・コメント数カウンター表示エリア -->
+                <!-- いいね・コメント数カウンター表示エリア -->
                 <div style="display: flex; gap: 20px; margin-bottom: 30px; align-items: center;">
                     <!-- いいねボタンエリア -->
                     <div style="text-align: center;">
@@ -72,13 +70,12 @@
                     </div>
                 </div>
 
-                <!-- 🛒 売切ガード付き購入ボタン -->
+                <!-- 売切ガード付き購入ボタン -->
                 @if($item->purchases->isNotEmpty())
                     <div style="display: block; text-align: center; background-color: #bbb; color: white; padding: 15px; border-radius: 4px; font-size: 18px; font-weight: bold; margin-bottom: 40px; cursor: not-allowed;">
                         売り切れました
                     </div>
                 @else
-                    <!-- 💡 ログイン前（ゲスト）でも他人の商品なら正しく「購入手続きへ」リンクが表示され、クリックでログイン画面へ誘導される王道ルートを確保！ -->
                     <a href="/purchase/{{ $item->id }}" style="display: block; text-align: center; background-color: #ff3333; color: white; text-decoration: none; padding: 15px; border-radius: 4px; font-size: 18px; font-weight: bold; margin-bottom: 40px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
                         購入手続きへ
                     </a>
@@ -86,11 +83,11 @@
 
             @endif
 
-            <!-- 📄 商品の説明（共通表示） -->
+            <!-- 商品の説明（共通表示） -->
             <h2 style="font-size: 18px; padding-bottom: 8px; margin-bottom: 15px; color: #333;">商品説明</h2>
             <p style="font-size: 16px; line-height: 1.6; color: #444; margin-bottom: 40px; white-space: pre-wrap;">{{ $item->description }}</p>
 
-            <!-- ℹ️ 商品の情報テーブル（共通表示） -->
+            <!-- 商品の情報テーブル（共通表示） -->
             <h2 style="font-size: 18px; margin-bottom: 15px; color: #333;">商品情報</h2>
             <table style="width: 100%; border-collapse: collapse; margin-bottom: 40px; font-size: 16px;">
                 <tr>
@@ -109,7 +106,7 @@
                 </tr>
             </table>
 
-            <!-- 💬 過去のコメント一覧表示エリア（仕様書項目：ユーザー名と本文表示） -->
+            <!-- 過去のコメント一覧表示エリア -->
             <h2 style="font-size: 18px; padding-bottom: 8px; margin-bottom: 20px; color: #333;">コメント ({{ $commentsCount }})</h2>
             <div style="margin-bottom: 30px;">
                 @forelse($item->comments as $comment)
@@ -134,7 +131,7 @@
                 @endforelse
             </div>
 
-            <!-- ⬇︎ 💡 コメント送信フォーム（仕様書9番対応） ⬇︎ -->
+            <!-- コメント送信フォーム -->
             <div style="border-radius: 6px;">
                 <h3 style="font-size: 16px; font-weight: bold; margin: 0 0 15px 0; color: #333;">商品へのコメント</h3>
 

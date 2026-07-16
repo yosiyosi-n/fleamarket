@@ -13,19 +13,15 @@ class ItemController extends Controller
      */
     public function index(Request $request)
     {
-        // 💡 1. URLから「現在のタブ（おすすめ or マイリスト）」と「検索文字」を取得
         $tab = $request->query('tab', 'recommend');
         $search = $request->query('search', '');
 
-        // 💡 2. データベースから商品を取得する土台を作る
         $query = Item::with('purchases');
 
-        // 💡 3. 商品検索機能
         if (!empty($search)) {
             $query->where('name', 'like', '%' . $search . '%');
         }
 
-        // 💡 4. タブに応じた商品の出し分け
         if ($tab === 'mylist') {
             if (Auth::check()) {
                 $query->whereHas('likes', function ($q) {
@@ -100,7 +96,6 @@ class ItemController extends Controller
             'image_path' => $path,
         ]);
 
-        // 3. 【複数選択対策】中間テーブル
         $item->categories()->attach($request->categories);
 
         return redirect('/');

@@ -4,18 +4,14 @@
     <div style="max-width: 400px; margin: 60px auto; padding: 30px;">
         <h2 style="text-align: center; margin-bottom: 30px; color: #333; font-size: 22px;">会員登録</h2>
 
-        <!-- 登録処理を実行するFortifyのURL「/register」へPOSTで送信します -->
         <form action="/register" method="POST">
-            <!-- 🔑 Laravelのセキュリティ対策（必須！） -->
             @csrf
 
             <!-- ユーザー名 -->
             <div style="margin-bottom: 20px;">
                 <label style="display: block; margin-bottom: 8px; font-weight: bold; color: #555;">ユーザー名</label>
-                <!-- 💡 ポイント：エラーがある時は枠線を赤く（#ff3333）します -->
                 <input type="text" name="name" value="{{ old('name') }}" style="width: 100%; padding: 10px; border: 1px solid {{ $errors->has('name') ? '#ff3333' : '#ccc' }}; border-radius: 4px; box-sizing: border-box;">
                 
-                <!-- ⬇︎ ユーザー名のエラーメッセージ表示 ⬇︎ -->
                 @error('name')
                     <div style="color: #ff3333; font-size: 14px; margin-top: 5px;">{{ $message }}</div>
                 @enderror
@@ -26,7 +22,6 @@
                 <label style="display: block; margin-bottom: 8px; font-weight: bold; color: #555;">メールアドレス</label>
                 <input type="email" name="email" value="{{ old('email') }}" style="width: 100%; padding: 10px; border: 1px solid {{ $errors->has('email') ? '#ff3333' : '#ccc' }}; border-radius: 4px; box-sizing: border-box;">
                 
-                <!-- ⬇︎ メールアドレスのエラーメッセージ表示 ⬇︎ -->
                 @error('email')
                     <div style="color: #ff3333; font-size: 14px; margin-top: 5px;">{{ $message }}</div>
                 @enderror
@@ -37,7 +32,6 @@
                 <label style="display: block; margin-bottom: 8px; font-weight: bold; color: #555;">パスワード</label>
                 <input type="password" name="password" style="width: 100%; padding: 10px; border: 1px solid {{ $errors->has('password') ? '#ff3333' : '#ccc' }}; border-radius: 4px; box-sizing: border-box;">
                 
-                <!-- ⬇︎ パスワードのエラーメッセージ表示 ⬇︎ -->
                 @error('password')
                     <div style="color: #ff3333; font-size: 14px; margin-top: 5px;">{{ $message }}</div>
                 @enderror
@@ -46,7 +40,6 @@
             <!-- パスワード確認用 -->
             <div style="margin-bottom: 25px;">
                 <label style="display: block; margin-bottom: 8px; font-weight: bold; color: #555;">パスワード（確認用）</label>
-                <!-- 💡 確認用はブラウザ側での一致チェック（confirmed）に連動するため、枠線は通常のままにしています -->
                 <input type="password" name="password_confirmation" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;">
             </div>
 

@@ -9,7 +9,6 @@ class ItemsTableSeeder extends Seeder
 {
     public function run()
     {
-        // 💡 【追加！】もしIDが1番のユーザーがいなければ、パスワードが「password」のテストユーザーを1人作成します
         if (!\App\Models\User::where('id', 1)->exists()) {
             \App\Models\User::create([
                 'id' => 1,
@@ -104,7 +103,6 @@ class ItemsTableSeeder extends Seeder
             ],
         ];
 
-        // 💡 ユーザーID:1 を出品者として紐づけて一括注入
         foreach ($items as $item) {
             DB::table('items')->insert(array_merge($item, [
                 'user_id' => 1,

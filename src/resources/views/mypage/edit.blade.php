@@ -7,10 +7,10 @@
         <form action="/mypage/profile" method="POST" enctype="multipart/form-data">
             @csrf
 
-            <!-- プロフィール画像設定エリア（赤枠ボタン化＆エラー案内付き） -->
+            <!-- プロフィール画像設定エリア -->
             <div style="display: flex; align-items: center; gap: 25px; margin-bottom: 35px; border: 1px dashed {{ $errors->has('image') ? '#ff3333' : 'transparent' }}; flex-wrap: wrap;">
                 
-                <!-- 現在のプロフィール画像丸枠 -->
+                <!-- 現在のプロフィール画像 -->
                 <div style="width: 80px; height: 80px; border-radius: 50%; background-color: #e0e0e0; overflow: hidden; display: flex; align-items: center; justify-content: center; border: 1px solid #ccc; flex-shrink: 0;">
                     @if($profile && $profile->image_path)
                         <img src="{{ asset('storage/' . $profile->image_path) }}" alt="プロフィール画像" style="width: 100%; height: 100%; object-fit: cover;">
@@ -21,53 +21,47 @@
 
                 <!-- ボタン配置エリア -->
                 <div style="flex: 1; min-width: 200px;">
-                    <!-- ⬇︎ 出品画面と同じデザインの「押せる赤いボタン」 ⬇︎ -->
                     <label style="display: inline-block; padding: 10px 20px; border: 1px solid #ff3333; border-radius: 10px; background-color: white; font-size: 14px; font-weight: bold; color: #ff3333; cursor: pointer; transition: background-color 0.2s; text-align: center; user-select: none;">
                         画像を選択する
                         
-                        <!-- 実際のファイル入力欄（hiddenで隠しますが、親のlabelのおかげでカチッと起動します） -->
                         <input type="file" name="image" accept="image/*" hidden>
                     </label>
 
-                    <!-- 💡 教材の範囲内（JavaScriptなし）で安全なエラー時の案内文 -->
                     @if($errors->has('name') || $errors->has('postal_code') || $errors->has('address') || $errors->has('image'))
                         <div style="font-size: 11px; font-weight: bold; color: #888; margin-top: 8px; line-height: 1.4;">
                             ⚠️ 画面が戻った際は、セキュリティ上画像の再選択が必要です
                         </div>
                     @endif
 
-                    <!-- 💡 画像エラーモニター -->
+                    <!-- 画像エラーモニター -->
                     @error('image')
                         <div style="color: #ff3333; font-size: 14px; margin-top: 5px; font-weight: bold;">{{ $message }}</div>
                     @enderror
                 </div>
             </div>
 
-            <!-- ユーザー名（仕様書14番：初期値保持） -->
+            <!-- ユーザー名 -->
             <div style="margin-bottom: 25px;">
                 <label style="display: block; font-weight: bold; color: #444;">ユーザー名</label>
                 <input type="text" name="name" value="{{ old('name', $profile->name ?? $user->name) }}" style="width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; font-size: 16px;">
-                <!-- 💡 ユーザー名エラーモニター -->
                 @error('name')
                     <div style="color: #ff3333; font-size: 14px; margin-top: 5px; font-weight: bold;">{{ $message }}</div>
                 @enderror
             </div>
 
-            <!-- 郵便番号（仕様書14番：初期値保持） -->
+            <!-- 郵便番号 -->
             <div style="margin-bottom: 25px;">
                 <label style="display: block; font-weight: bold; color: #444;">郵便番号</label>
                 <input type="text" name="postal_code" value="{{ old('postal_code', $profile->postal_code ?? '') }}" placeholder="123-4567" style="width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; font-size: 16px;">
-                <!-- 💡 郵便番号エラーモニター -->
                 @error('postal_code')
                     <div style="color: #ff3333; font-size: 14px; margin-top: 5px; font-weight: bold;">{{ $message }}</div>
                 @enderror
             </div>
 
-            <!-- 住所（仕様書14番：初期値保持） -->
+            <!-- 住所 -->
             <div style="margin-bottom: 25px;">
                 <label style="display: block; font-weight: bold; color: #444;">住所</label>
                 <input type="text" name="address" value="{{ old('address', $profile->address ?? '') }}" placeholder="東京都渋谷区宇田川町1-1" style="width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; font-size: 16px;">
-                <!-- 💡 住所エラーモニター -->
                 @error('address')
                     <div style="color: #ff3333; font-size: 14px; margin-top: 5px; font-weight: bold;">{{ $message }}</div>
                 @enderror
@@ -79,7 +73,7 @@
                 <input type="text" name="building" value="{{ old('building', $profile->building ?? '') }}" placeholder="コーチテックマンション 202" style="width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; font-size: 16px;">
             </div>
 
-            <!-- 更新するボタン -->
+            <!-- 更新ボタン -->
             <button type="submit" style="width: 100%; padding: 16px; background-color: #ff3333; color: white; border: none; border-radius: 4px; font-size: 18px; font-weight: bold; cursor: pointer;">
                 更新する
             </button>

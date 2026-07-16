@@ -1,17 +1,15 @@
 <x-app-layout>
     <x-slot name="title">商品一覧 - フリマアプリ</x-slot>
 
-    <!-- 📑 タブ切り替え（おすすめ / マイリスト：仕様書5番対応） -->
-    <!-- 💡 ポイント：タブを切り替えても検索文字（?search=〇〇）が消えずに保持されるようにURLを組み立てます -->
+    <!-- タブ切り替え -->
     <div style="background-color: #ffffff; border-bottom: 1px solid #e0e0e0; display: flex; justify-content: center; gap: 40px;">
         <a href="/?tab=recommend&search={{ urlencode($search) }}" style="text-decoration: none; font-weight: bold; padding: 15px 10px; {{ $tab !== 'mylist' ? 'color: #ff3333; border-bottom: 3px solid #ff3333;' : 'color: #666;' }}">おすすめ</a>
         <a href="/?tab=mylist&search={{ urlencode($search) }}" style="text-decoration: none; font-weight: bold; padding: 15px 10px; {{ $tab === 'mylist' ? 'color: #ff3333; border-bottom: 3px solid #ff3333;' : 'color: #666;' }}">マイリスト</a>
     </div>
 
-    <!-- 📦 メインコンテンツ（商品一覧エリア） -->
+    <!-- メインコンテンツ（商品一覧エリア） -->
     <main style="max-width: 1024px; margin: 30px auto; padding: 0 20px;">
         
-        <!-- 🔍 検索キーワードの表示（検索中のみ出現） -->
         @if(!empty($search))
             <p style="color: #666; font-size: 15px; margin-bottom: 20px;">「<strong style="color: #333;">{{ $search }}</strong>」の検索結果（{{ $items->count() }}件）</p>
         @endif
@@ -36,7 +34,6 @@
                     <!-- 商品画像エリア -->
                     <div style="width: 100%; aspect-ratio: 1; background-color: #e0e0e0; display: flex; align-items: center; justify-content: center; color: #999;">
                         @if($item->image_path)
-                            <!-- ⬇︎ ネット画像とローカル画像のハイブリッド対応 ⬇︎ -->
                             @if(str_starts_with($item->image_path, 'http'))
                                 <img src="{{ $item->image_path }}" alt="{{ $item->name }}" style="width: 100%; height: 100%; object-fit: cover;">
                             @else

@@ -66,28 +66,23 @@ class FortifyServiceProvider extends ServiceProvider
         \Laravel\Fortify\Fortify::authenticateUsing(function (Request $request) {
             $user = \App\Models\User::where('email', $request->email)->first();
 
-            // パスワードが一致していればユーザー情報を返してログイン成功！
             if ($user && \Illuminate\Support\Facades\Hash::check($request->password, $user->password)) {
                 return $user;
             }
 
-            // ❌ 失敗した場合は、シンプルに直接日本語メッセージを投げます
             throw \Illuminate\Validation\ValidationException::withMessages([
                 'email' => ['ログイン情報が登録されていません。'],
             ]);
         });
 
-        // ⬇︎ 【★ここを追加！】会員登録が成功した直後「だけ」をプロフィール編集画面へ強制移動させる設定 ⬇︎
         $this->app->singleton(\Laravel\Fortify\Contracts\RegisterResponse::class, function () {
             return new class implements \Laravel\Fortify\Contracts\RegisterResponse {
                 public function toResponse($request) {
-                    // 💡 新規登録ボタンを押した直後は、手動で作った誘導画面（/email/verify）へ真っ直ぐ飛ばします！
                     return redirect('/email/verify');
                 }
             };
         });
 
-        // ⬇︎ 💡 【これが本当の最後のピース！】メール内の認証ボタンをポチッと押して「認証が完了した瞬間」だけ、狙い撃ちでプロフィール画面へ飛ばします！ ⬇︎
         $this->app->singleton(\Laravel\Fortify\Contracts\VerifyEmailResponse::class, function () {
             return new class implements \Laravel\Fortify\Contracts\VerifyEmailResponse {
                 public function toResponse($request) {

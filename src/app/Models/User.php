@@ -50,7 +50,6 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function profile()
     {
-        // User は Profile を1つだけ持っている（hasOne）という関係を定義します
         return $this->hasOne(Profile::class);
     }
 }

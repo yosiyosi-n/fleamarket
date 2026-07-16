@@ -3,10 +3,10 @@
 
     <main style="max-width: 1024px; margin: 40px auto; padding: 0 20px;">
         
-        <!-- 👤 🗂️ 上段：プロフィール情報エリア（仕様書項目） -->
+        <!-- 上段：プロフィール情報エリア -->
         <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 40px; padding: 30px 130px;">
             <div style="display: flex; align-items: center; gap: 25px;">
-                <!-- プロフィール画像（仕様書項目） -->
+                <!-- プロフィール画像 -->
                 <div style="width: 100px; height: 100px; border-radius: 50%; background-color: #e0e0e0; overflow: hidden; display: flex; align-items: center; justify-content: center; border: 1px solid #ccc;">
                     @if($profile && $profile->image_path)
                         <img src="{{ asset('storage/' . $profile->image_path) }}" alt="ユーザー画像" style="width: 100%; height: 100%; object-fit: cover;">
@@ -14,7 +14,7 @@
                         <span style="color: #999; font-size: 14px; font-weight: bold;">NO IMAGE</span>
                     @endif
                 </div>
-                <!-- ユーザー名（仕様書項目） -->
+                <!-- ユーザー名 -->
                 <h1 style="font-size: 24px; font-weight: bold; color: #333; margin: 0;">
                     {{ $profile->name ?? $user->name }}
                 </h1>
@@ -25,7 +25,7 @@
             </a>
         </div>
 
-        <!-- 📑 中段：タブ切り替え（仕様書のURLルールに完全連動） -->
+        <!-- 中段：タブ切り替え  -->
         <div style="border-bottom: 1px solid #e0e0e0; display: flex; gap: 40px; margin-bottom: 30px; font-size: 16px;">
             <!-- 出品した商品タブ -->
             <a href="/mypage?page=sell" style="text-decoration: none; font-weight: bold; padding: 15px 10px; {{ $page === 'sell' ? 'color: #ff3333; border-bottom: 3px solid #ff3333;' : 'color: #666;' }}">
@@ -37,14 +37,13 @@
             </a>
         </div>
 
-        <!-- 📦 下段：商品一覧エリア（4列折り返し設定） -->
+        <!-- 下段：商品一覧エリア -->
         <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px;">
             @forelse($items as $item)
                 <a href="/item/{{ $item->id }}" style="background-color: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.05); text-decoration: none; color: #333; border: 1px solid #e0e0e0; display: block;">
-                    <!-- 商品画像エリア（ダミーデータ対応版） -->
+                    <!-- 商品画像エリア -->
                     <div style="width: 100%; aspect-ratio: 1; background-color: #e0e0e0; display: flex; align-items: center; justify-content: center; color: #999;">
                         @if($item->image_path)
-                            <!-- ⬇︎ 💡 ネット画像とローカル画像のハイブリッド対応をここにも合流！ ⬇︎ -->
                             @if(str_starts_with($item->image_path, 'http'))
                                 <img src="{{ $item->image_path }}" alt="{{ $item->name }}" style="width: 100%; height: 100%; object-fit: cover;">
                             @else
