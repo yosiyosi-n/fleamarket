@@ -30,7 +30,7 @@
             <!-- 💡 【条件分岐】もし自分が出品した商品だったら（出品者モード） -->
             @if(Auth::check() && $item->user_id === Auth::id())
 
-                <!-- 🗑️ 出品取り消しボタン（自分のときだけ出現） -->
+                <!-- 🗑️ 出品取り消しボタン -->
                 <form action="/item/{{ $item->id }}/delete" method="POST" onsubmit="return confirm('本当にこの商品の出品を取り消しますか？');" style="margin-bottom: 40px;">
                     @csrf
                     @method('DELETE')
@@ -41,6 +41,7 @@
 
             <!-- 💡 自分でない他人の商品、またはログイン前のゲストだったら（通常の購入・いいね・コメントモード） -->
             @else
+
 
                 <!-- 📊 いいね・コメント数カウンター表示エリア -->
                 <div style="display: flex; gap: 20px; margin-bottom: 30px; align-items: center;">
