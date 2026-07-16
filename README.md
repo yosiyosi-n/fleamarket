@@ -38,7 +38,7 @@
 
 1. **リポジトリのクローンと移動**
    ```bash
-   git clone https://github.com/yosiyosi-n/fleamarket.git
+   git clone git@github.com:yosiyosi-n/fleamarket.git
    cd fleamarket
    ```
 
@@ -53,7 +53,7 @@
    composer install
    cp .env.example .env
    ```
-   ※ `.env` のデータベース（DB_HOST=mysql）とメール（MAIL_HOST=mailhog）の設定を修正してください。
+   ※ `.env` のデータベース（DB_HOST=mysql）とメール（MAIL_HOST=mailhog）の設定を以下のように修正してください。
 
    ```env
    DB_CONNECTION=mysql
@@ -69,9 +69,18 @@
    MAIL_FROM_NAME="フリマアプリ運営事務局"
    ```
 
+4. **アプリケーション起動準備（画像リンク＆ダミーデータ生成）**
    ```bash
+   # 🔑 アプリケーションキーの生成
    php artisan key:generate
+
+   # 📊 データベースの初期化 ＆ スプレッドシート指定の全10品ダミーデータを一括注入
    php artisan migrate:fresh --seed
+
+   # 🖼️ 商品画像を表示させるため、storageとpublicを繋ぐ連絡通路（シンボリックリンク）を開通
+   php artisan storage:link
+
+   # 🧹 最適化キャッシュのクリアをしてコンテナから脱出
    php artisan optimize:clear
    exit
    ```
