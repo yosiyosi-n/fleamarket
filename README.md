@@ -77,6 +77,12 @@ DB_PORT=3306
 DB_DATABASE=laravel_db
 DB_USERNAME=root
 DB_PASSWORD=root
+
+MAIL_MAILER=smtp
+MAIL_HOST=mailhog
+MAIL_PORT=1025
+MAIL_FROM_ADDRESS="noreply@fleamarket.com"
+MAIL_FROM_NAME="フリマアプリ運営事務局"
 ```
 修正・保存したら、コンテナ内でアプリケーションキーを生成します。
 ```bash
